@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Log BPK Executive | v3.0.6</title>
+    <title>BPK Command Center | v4.0.0</title>
     
     <link rel="icon" type="image/png" href="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png">
 
@@ -18,6 +18,10 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <!-- Export Libs -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
 
     <style>
         :root {
@@ -56,23 +60,19 @@
             background: rgba(0, 0, 0, 0.6) !important;
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
-            padding: 12px;
+            padding: 10px;
             color: #ffffff !important;
             font-size: 0.85rem;
             width: 100%;
             outline: none;
-            transition: 0.3s;
         }
-        .input-field:focus { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
 
         .label-pro {
             font-size: 10px;
             font-weight: 800;
             text-transform: uppercase;
             color: rgba(255,255,255,0.4);
-            margin-bottom: 5px;
-            letter-spacing: 1px;
-            display: block;
+            margin-bottom: 4px;
         }
 
         #loginScreen {
@@ -88,8 +88,10 @@
             backdrop-filter: blur(25px) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             color: white !important;
+            border-radius: 30px !important;
         }
 
+        .hidden { display: none !important; }
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 10px; }
     </style>
@@ -98,16 +100,17 @@
 
     <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 opacity-[0.03] pointer-events-none -z-10">
 
-    <!-- LOGIN -->
+    <!-- LOGIN SCREEN -->
     <div id="loginScreen">
-        <div class="glass p-10 max-w-sm w-full text-center border-t-4 border-blue-500 shadow-2xl" data-aos="zoom-in">
+        <div class="glass p-10 max-w-sm w-full text-center border-t-4 border-blue-500 shadow-2xl">
             <img src="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png" class="h-24 mx-auto mb-6">
             <h2 class="text-2xl font-extrabold uppercase tracking-widest mb-1">BPK CLOUD</h2>
-            <p class="text-[10px] text-blue-400 mb-8 uppercase tracking-widest font-bold">Executive Suite v3.0.6</p>
+            <p class="text-[10px] text-blue-400 mb-8 uppercase tracking-widest font-bold">Access Portal v4.0.0</p>
             <button onclick="login()" class="flex items-center justify-center gap-4 w-full py-4 px-6 rounded-2xl font-bold text-sm transition-all border border-white/10 bg-white/5 hover:bg-white/10 shadow-xl">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="h-6">
-                <span>LOGIN GOOGLE</span>
+                <span>MASUK DENGAN GOOGLE</span>
             </button>
+            <p id="loginStatus" class="mt-4 text-[9px] text-yellow-500 italic hidden">Menghubungi Server...</p>
         </div>
     </div>
 
@@ -118,35 +121,35 @@
                 <div class="flex items-center gap-4">
                     <img src="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png" class="h-10 lg:h-12 rounded-lg">
                     <div class="flex flex-col">
-                        <h1 class="text-white text-sm lg:text-lg font-extrabold uppercase leading-none tracking-tight">BPK VETERINAR CLOUD</h1>
+                        <h1 class="text-white text-sm lg:text-lg font-extrabold uppercase leading-none tracking-tight">BPK VETERINAR</h1>
                         <div class="flex items-center gap-2 mt-1">
                             <img id="userAvatar" class="h-4 w-4 rounded-full border border-white/20">
-                            <span id="userName" class="text-[9px] text-blue-400 font-bold uppercase tracking-widest">---</span>
+                            <span id="userName" class="text-[9px] text-blue-400 font-bold uppercase">---</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- CLOCK 12H -->
                 <div class="flex items-center gap-4 bg-black/40 px-6 py-3 rounded-2xl border border-white/5 shadow-inner">
-                    <h1 id="realTime" class="text-xl md:text-3xl font-digital font-bold text-blue-400">00:00:00 AM</h1>
+                    <h1 id="realTime" class="text-xl md:text-3xl font-digital font-bold text-blue-400 uppercase">00:00:00 AM</h1>
                     <div class="h-8 w-[1px] bg-white/10"></div>
-                    <div class="flex flex-col text-left font-bold uppercase tracking-tighter">
+                    <div class="flex flex-col text-left font-bold uppercase">
                         <p id="realDay" class="text-[10px] text-blue-500">---</p>
                         <p id="realDate" class="text-[9px] text-white/40">--/--/----</p>
                     </div>
                 </div>
-                <button onclick="logout()" class="bg-red-500/10 border border-red-500/30 text-red-500 text-[9px] px-5 py-2 rounded-full font-bold uppercase hover:bg-red-600 hover:text-white transition shadow-lg">LOGOUT 🔒</button>
+                <button onclick="logout()" class="bg-red-500/10 border border-red-500/30 text-red-500 text-[9px] px-5 py-2 rounded-full font-bold hover:bg-red-600 hover:text-white transition">LOGOUT 🔒</button>
             </div>
         </header>
 
         <main class="container mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
-                <!-- FORM -->
+                <!-- LEFT RAIL: FORM -->
                 <div class="lg:col-span-4 space-y-6">
                     <div class="glass p-6 border-t-4 border-blue-500 shadow-xl">
-                        <div class="mb-5 flex bg-black/50 p-1 rounded-xl border border-white/5">
-                            <button onclick="setType('tugas')" id="btnTugas" class="flex-1 py-2 text-[9px] font-bold rounded-lg transition-all bg-blue-600 text-white uppercase shadow-lg">Tugas</button>
+                        <div class="mb-5 flex bg-black/50 p-1.5 rounded-xl border border-white/5">
+                            <button onclick="setType('tugas')" id="btnTugas" class="flex-1 py-2 text-[9px] font-bold rounded-lg transition-all bg-blue-600 text-white uppercase">Tugas</button>
                             <button onclick="setType('log')" id="btnLog" class="flex-1 py-2 text-[9px] font-bold rounded-lg transition-all text-white/40 uppercase">Gerak</button>
                             <button onclick="setType('minyak')" id="btnMinyak" class="flex-1 py-2 text-[9px] font-bold rounded-lg transition-all text-white/40 uppercase">Minyak</button>
                         </div>
@@ -158,14 +161,13 @@
                             </div>
 
                             <div class="grid grid-cols-3 gap-2">
-                                <div><label class="label-pro">Mula</label><input type="text" id="timeFrom" class="input-field font-digital text-center"></div>
-                                <div><label class="label-pro">Trans</label><input type="text" id="timeSemasa" class="input-field font-digital text-center"></div>
-                                <div><label class="label-pro">Akhir</label><input type="text" id="timeTo" class="input-field font-digital text-center"></div>
+                                <div><label class="label-pro text-[8px]">Mula</label><input type="text" id="timeFrom" class="input-field font-digital text-center"></div>
+                                <div><label class="label-pro text-[8px]">Trans</label><input type="text" id="timeSemasa" class="input-field font-digital text-center"></div>
+                                <div><label class="label-pro text-[8px]">Akhir</label><input type="text" id="timeTo" class="input-field font-digital text-center"></div>
                             </div>
 
-                            <!-- Group Lokasi (Tugas & Gerak) -->
                             <div id="locationGroup" class="space-y-4">
-                                <label class="label-pro">Laluan (Mula - Transit - Akhir)</label>
+                                <label class="label-pro">Laluan (Mula - Transit - Ke)</label>
                                 <div class="grid grid-cols-3 gap-2">
                                     <input type="text" id="fromLoc" class="input-field" placeholder="DARI">
                                     <input type="text" id="sLoc" class="input-field" placeholder="SEMASA">
@@ -173,13 +175,11 @@
                                 </div>
                             </div>
 
-                            <!-- Group Odometer (Gerak & Minyak) -->
                             <div id="odoGroup" class="hidden">
                                 <label class="label-pro text-yellow-500">Odometer Terkini (KM)</label>
-                                <input type="number" id="odoVal" class="input-field border-yellow-500/30" placeholder="Bacaan Odometer KM">
+                                <input type="number" id="odoVal" class="input-field border-yellow-500/30" placeholder="Bacaan KM">
                             </div>
 
-                            <!-- Group Minyak (Khusus Minyak) -->
                             <div id="fuelGroup" class="hidden space-y-4">
                                 <div class="grid grid-cols-2 gap-3">
                                     <div>
@@ -191,44 +191,47 @@
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="label-pro text-red-400">Jumlah Isian (RM)</label>
+                                        <label class="label-pro text-red-400">Isian (RM)</label>
                                         <input type="number" id="fuelAmount" class="input-field border-red-500/30" placeholder="0.00">
                                     </div>
                                 </div>
                             </div>
 
-                            <div>
-                                <label class="label-pro">Butiran / Catatan</label>
-                                <textarea id="taskInput" rows="3" class="input-field" placeholder="Tulis butiran..."></textarea>
-                            </div>
+                            <textarea id="taskInput" rows="3" class="input-field" placeholder="Tulis butiran..."></textarea>
                             
-                            <button onclick="saveEntry()" class="w-full btn-3d py-4 text-xs font-extrabold uppercase tracking-widest text-white mt-2">Update Cloud Storage ☁️</button>
+                            <button onclick="saveEntry()" class="w-full btn-3d py-4 text-xs font-extrabold uppercase tracking-widest text-white mt-2">SIMPAN KE CLOUD 💾</button>
                         </div>
                     </div>
 
-                    <div class="glass p-5 border-l-4 border-yellow-500 shadow-xl" data-aos="zoom-in">
-                        <button onclick="showMonthSummary()" class="w-full btn-3d bg-yellow-600/50 text-[10px] py-3 rounded-lg uppercase border border-yellow-500/30">🔍 Analisis Keseluruhan Bulan Ini</button>
+                    <!-- EXPORT HUB -->
+                    <div class="glass p-6 border-l-4 border-yellow-500 shadow-xl" data-aos="zoom-in">
+                        <h3 class="text-[10px] font-extrabold text-yellow-500 uppercase tracking-[0.3em] mb-4 text-center">Multi-Platform Export Hub</h3>
+                        <div class="grid grid-cols-2 gap-2 mb-2">
+                            <button onclick="exportWord()" class="btn-3d bg-blue-700/50 text-[8px] py-3 rounded-lg uppercase">📄 Word</button>
+                            <button onclick="exportExcel()" class="btn-3d bg-green-700/50 text-[8px] py-3 rounded-lg uppercase">📊 Excel</button>
+                            <button onclick="exportPPT()" class="btn-3d bg-red-700/50 text-[8px] py-3 rounded-lg uppercase">🎬 PPT</button>
+                            <button onclick="exportCSV()" class="btn-3d bg-purple-700/50 text-[8px] py-3 rounded-lg uppercase">🗄️ Access</button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="exportNotepad()" class="btn-3d bg-gray-600/50 text-[8px] py-3 rounded-lg uppercase">📝 Notepad</button>
+                            <button onclick="shareToNotes()" class="btn-3d bg-indigo-600/50 text-[8px] py-3 rounded-lg uppercase">📱 Share/Notes</button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- LIVE FEED -->
+                <!-- RIGHT RAIL: LOG -->
                 <div class="lg:col-span-8">
                     <div class="glass flex flex-col min-h-[600px] shadow-2xl overflow-hidden">
                         <div class="p-5 bg-white/5 border-b border-white/5 flex flex-wrap justify-between items-center gap-4">
-                            <h3 class="font-bold uppercase tracking-widest text-[11px] text-blue-300">Live Cloud Sync Feed</h3>
-                            <div class="flex gap-4 text-[9px] font-bold uppercase tracking-widest">
-                                <span class="text-white">● Tugas</span>
-                                <span class="text-green-400">● Gerak</span>
-                                <span class="text-red-400 font-bold underline">● Minyak</span>
-                            </div>
+                            <h3 class="font-bold uppercase tracking-widest text-[11px] text-blue-300">Live Activity Feed</h3>
+                            <button onclick="showMonthSummary()" class="text-[10px] bg-yellow-500/20 text-yellow-400 px-4 py-1 rounded-full font-bold border border-yellow-500/30">🔍 RINGKASAN BULANAN</button>
                         </div>
-                        
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-sm">
                                 <thead class="bg-black/30 text-[9px] uppercase text-white/40 tracking-[0.2em]">
                                     <tr>
                                         <th class="p-5">Waktu Fasa</th>
-                                        <th class="p-5">Butiran / Kewangan / Analisis</th>
+                                        <th class="p-5">Catatan / Analisis Kewangan</th>
                                         <th class="p-5 text-right">Aksi</th>
                                     </tr>
                                 </thead>
@@ -241,7 +244,7 @@
         </main>
     </div>
 
-    <!-- Scripts -->
+    <!-- Audio & Scripts -->
     <audio id="notifSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -250,7 +253,7 @@
     <script>
         AOS.init();
 
-        // --- FIREBASE CONFIG (USE YOUR OWN) ---
+        // --- FIREBASE CONFIG (Kekal Guna Config Anda) ---
         const firebaseConfig = {
           apiKey: "AIzaSyBCV-68YWkZkDjIodxWmn6z-d9H7ZS8bDs",
           authDomain: "bpk-cloud-system.firebaseapp.com",
@@ -267,6 +270,7 @@
         let currentUser = null;
         let tasks = [];
 
+        // --- LOGIN FIX LOGIC ---
         auth.onAuthStateChanged(user => {
             if (user) {
                 currentUser = user;
@@ -281,7 +285,19 @@
             }
         });
 
-        function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
+        async function login() {
+            const status = document.getElementById('loginStatus');
+            status.classList.remove('hidden');
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                // Gunakan Popup, Jika Gagal Gunakan Redirect
+                await auth.signInWithPopup(provider);
+            } catch (error) {
+                console.log("Popup blocked or failed, redirecting...");
+                await auth.signInWithRedirect(provider);
+            }
+        }
+
         function logout() { auth.signOut(); }
 
         function syncData() {
@@ -297,12 +313,10 @@
         function setType(type) {
             currentType = type;
             ['btnTugas', 'btnLog', 'btnMinyak'].forEach(b => document.getElementById(b).className = "flex-1 py-2 text-[9px] font-bold rounded-lg transition-all text-white/40 uppercase shadow-none");
-            
             const activeBtn = type === 'tugas' ? 'btnTugas' : type === 'log' ? 'btnLog' : 'btnMinyak';
             const activeColor = type === 'tugas' ? 'bg-blue-600' : type === 'log' ? 'bg-green-600' : 'bg-red-600';
             document.getElementById(activeBtn).className = `flex-1 py-2 text-[9px] font-bold rounded-lg transition-all ${activeColor} text-white uppercase shadow-lg`;
 
-            document.getElementById('locationGroup').style.display = (type === 'minyak') ? 'none' : 'block';
             document.getElementById('odoGroup').style.display = (type === 'tugas') ? 'none' : 'block';
             document.getElementById('fuelGroup').style.display = (type === 'minyak') ? 'block' : 'none';
         }
@@ -313,13 +327,11 @@
             if(!date || !tFrom) return Swal.fire('Ralat', 'Tarikh & Masa wajib.', 'error');
 
             const odo = parseFloat(document.getElementById('odoVal').value) || 0;
-            const lastWithOdo = tasks.find(t => t.odo > 0);
-            let dist = (odo > 0 && lastWithOdo) ? Math.max(0, odo - lastWithOdo.odo) : 0;
+            const lastLog = tasks.find(t => t.odo > 0);
+            let dist = (odo > 0 && lastLog) ? Math.max(0, odo - lastLog.odo) : 0;
 
             const newEntry = {
-                id: Date.now(),
-                type: currentType,
-                date,
+                id: Date.now(), type: currentType, date,
                 monthYear: date.split('-')[1] + '-' + date.split('-')[2],
                 tFrom, tSemasa: document.getElementById('timeSemasa').value || '-', tTo: document.getElementById('timeTo').value || '-',
                 from: document.getElementById('fromLoc').value || '-',
@@ -335,7 +347,7 @@
             ['datePicker','timeFrom','timeSemasa','timeTo','fromLoc','sLoc','toLoc','odoVal','taskInput','fuelAmount'].forEach(id => {
                 if(document.getElementById(id)) document.getElementById(id).value = '';
             });
-            Swal.fire({ icon: 'success', title: 'Data Cloud Disimpan', timer: 1000, showConfirmButton: false });
+            Swal.fire({ icon: 'success', title: 'Tersimpan!', timer: 800, showConfirmButton: false });
         }
 
         function renderUI() {
@@ -355,7 +367,7 @@
                 const header = document.createElement('tr');
                 header.className = "clickable-header bg-blue-500/10 border-l-4 border-blue-500 shadow-lg";
                 header.onclick = () => showDaySummary(date);
-                header.innerHTML = `<td colspan="3" class="p-3 text-[10px] font-extrabold uppercase text-blue-300">📅 ${date} <span class="ml-2 opacity-50 italic">[Penyatuan Harian]</span></td>`;
+                header.innerHTML = `<td colspan="3" class="p-3 text-[10px] font-extrabold uppercase text-blue-300">📅 ${date} <span class="ml-2 opacity-50 italic">[Klik Penyatuan]</span></td>`;
                 body.appendChild(header);
 
                 dayTasks.forEach(t => {
@@ -369,9 +381,9 @@
                             ${t.tFrom} → ${t.tTo}
                         </td>
                         <td class="p-4">
-                            <div class="font-medium text-[12px]">${t.note}</div>
-                            ${isL ? `<div class="text-[9px] text-green-500/60 font-bold uppercase mt-1">📍 ${t.from} > ${t.to} | +${t.distance}KM</div>` : ''}
-                            ${isM ? `<div class="text-[9px] text-red-400 font-extrabold mt-1 uppercase tracking-tighter">ISI MINYAK: RM ${t.fuelAmount} (${t.fuelType}) | ODO: ${t.odo}</div>` : ''}
+                            <div class="font-medium text-[12px]">${t.note.substring(0,60)}...</div>
+                            ${isL ? `<div class="text-[9px] text-green-500/60 font-bold mt-1 uppercase tracking-tighter">📍 ${t.from} > ${t.to} | +${t.distance}KM</div>` : ''}
+                            ${isM ? `<div class="text-[9px] text-red-400 font-extrabold mt-1 uppercase tracking-tighter">Isian: RM ${t.fuelAmount} (${t.fuelType}) | ODO: ${t.odo}</div>` : ''}
                         </td>
                         <td class="p-4 text-right">
                             <button onclick="event.stopPropagation(); deleteEntry('${t.docId}')" class="text-red-500/30 hover:text-red-500 text-[9px] font-bold uppercase">Padam</button>
@@ -382,22 +394,24 @@
             });
         }
 
+        // --- ANALYSIS FUNCTIONS ---
         function showDaySummary(date) {
             const dayRecords = tasks.filter(t => t.date === date);
             const totalFuel = dayRecords.reduce((s,t) => s + (t.fuelAmount || 0), 0);
             const totalKM = dayRecords.reduce((s,t) => s + (t.distance || 0), 0);
             
-            let html = `<div class="grid grid-cols-2 gap-3 mb-6">
-                <div class="bg-red-500/10 p-4 rounded-2xl border border-red-500/30 text-center"><p class="text-red-400 text-[9px] font-bold uppercase">RM Minyak</p><p class="text-2xl font-bold">RM ${totalFuel.toFixed(2)}</p></div>
-                <div class="bg-green-500/10 p-4 rounded-2xl border border-green-500/30 text-center"><p class="text-green-400 text-[9px] font-bold uppercase">Jarak KM</p><p class="text-2xl font-bold">${totalKM} KM</p></div>
-            </div><div class="space-y-3 max-h-[400px] overflow-y-auto pr-2">`;
+            let html = `
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <div class="bg-red-500/10 p-4 rounded-2xl border border-red-500/30 text-center"><p class="text-red-400 text-[9px] font-bold uppercase">Kos Minyak</p><p class="text-2xl font-bold">RM ${totalFuel.toFixed(2)}</p></div>
+                    <div class="bg-green-500/10 p-4 rounded-2xl border border-green-500/30 text-center"><p class="text-green-400 text-[9px] font-bold uppercase">Jarak KM</p><p class="text-2xl font-bold">${totalKM} KM</p></div>
+                </div><div class="space-y-3 max-h-[400px] overflow-y-auto pr-2 text-left">`;
             
             dayRecords.forEach(t => {
-                html += `<div class="p-3 bg-white/5 border border-white/5 rounded-xl text-left">
-                    <p class="text-[9px] font-bold uppercase ${t.type==='log'?'text-green-400':t.type==='minyak'?'text-red-400':'text-blue-400'}">${t.type}</p>
-                    <p class="text-xs mt-1 text-white/90 font-bold">${t.note}</p>
-                    <p class="text-[9px] text-white/40 uppercase mt-1">Laluan: ${t.from} ke ${t.to}</p>
-                </div>`;
+                html += `
+                    <div class="p-3 bg-white/5 border border-white/5 rounded-xl">
+                        <p class="text-[9px] font-bold uppercase ${t.type==='log'?'text-green-400':t.type==='minyak'?'text-red-400':'text-blue-400'}">${t.type} (${t.tFrom})</p>
+                        <p class="text-xs mt-1 text-white/90 font-bold">${t.note}</p>
+                    </div>`;
             });
             html += `</div>`;
             Swal.fire({ customClass:{popup:'swal-glass'}, title:`Summary: ${date}`, html });
@@ -409,20 +423,86 @@
             const totalRM = monthData.reduce((s,t) => s + (t.fuelAmount || 0), 0);
             const totalKM = monthData.reduce((s,t) => s + (t.distance || 0), 0);
 
-            let html = `<div class="grid grid-cols-2 gap-3 mb-6">
-                <div class="bg-red-500/10 p-4 rounded-2xl border border-red-500/20 text-center"><p class="text-red-400 text-[9px] font-bold uppercase">Kos Sebulan</p><p class="text-xl font-bold">RM ${totalRM.toFixed(2)}</p></div>
-                <div class="bg-green-500/10 p-4 rounded-2xl border border-green-500/20 text-center"><p class="text-green-400 text-[9px] font-bold uppercase">Jarak Sebulan</p><p class="text-xl font-bold">${totalKM} KM</p></div>
-            </div><div class="text-left space-y-2 max-h-[400px] overflow-y-auto pr-2">`;
+            let html = `
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <div class="bg-red-500/10 p-4 rounded-2xl border border-red-500/20 text-center"><p class="text-red-400 text-[9px] font-bold uppercase">RM Sebulan</p><p class="text-xl font-bold text-white">RM ${totalRM.toFixed(2)}</p></div>
+                    <div class="bg-green-500/10 p-4 rounded-2xl border border-green-500/20 text-center"><p class="text-green-400 text-[9px] font-bold uppercase">Jarak Sebulan</p><p class="text-xl font-bold text-white">${totalKM} KM</p></div>
+                </div><div class="text-left space-y-2 max-h-[400px] overflow-y-auto pr-2">`;
             
             monthData.forEach(t => {
-                html += `<div class="p-3 border-b border-white/5">
-                    <div class="flex justify-between text-[9px] font-bold uppercase ${t.type==='log'?'text-green-400':t.type==='minyak'?'text-red-400':'text-blue-400'}"><span>${t.date}</span><span>${t.type}</span></div>
-                    <p class="text-xs mt-1 font-bold">${t.note}</p>
-                    <div class="flex justify-between text-[9px] opacity-50 mt-1 uppercase"><span>KM: +${t.distance}</span><span>${t.fuelAmount > 0 ? 'RM '+t.fuelAmount : ''}</span></div>
-                </div>`;
+                html += `
+                    <div class="p-3 border-b border-white/5">
+                        <div class="flex justify-between text-[9px] font-bold uppercase ${t.type==='log'?'text-green-400':t.type==='minyak'?'text-red-400':'text-blue-400'}"><span>${t.date}</span><span>${t.type}</span></div>
+                        <p class="text-xs mt-1 font-bold">${t.note}</p>
+                        <div class="flex justify-between text-[9px] opacity-50 mt-1 uppercase"><span>KM: +${t.distance}</span><span>${t.fuelAmount > 0 ? 'RM '+t.fuelAmount : ''}</span></div>
+                    </div>`;
             });
             html += `</div>`;
-            Swal.fire({ customClass:{popup:'swal-glass'}, title:`Analisis Bulanan`, html });
+            Swal.fire({ customClass:{popup:'swal-glass'}, title:`Executive Month Analysis`, html });
+        }
+
+        // --- EXPORT LOGIC ---
+        function exportExcel() {
+            const ws = XLSX.utils.json_to_sheet(tasks);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "MasterLog");
+            XLSX.writeFile(wb, `Log_BPK_${Date.now()}.xlsx`);
+        }
+
+        function exportWord() {
+            let content = "LAPORAN LOG BPK VETERINAR\n\n";
+            tasks.forEach(t => content += `[${t.date}] ${t.tFrom} - ${t.tTo}: ${t.note}\nLaluan: ${t.from} ke ${t.to} | Odo: ${t.odo} | KM: +${t.distance}\n\n`);
+            const blob = new Blob([content], {type:"application/msword"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href=url; a.download=`Log_BPK.doc`; a.click();
+        }
+
+        function exportPPT() {
+            let pptx = new PptGenJS();
+            tasks.slice(0,10).forEach(t => {
+                let slide = pptx.addSlide();
+                slide.addText(`LOG ENTRI: ${t.date}`, { x:1, y:1, fontSize:24, bold:true });
+                slide.addText(`Kategori: ${t.type.toUpperCase()}`, { x:1, y:2, fontSize:18 });
+                slide.addText(`Catatan: ${t.note}`, { x:1, y:3, fontSize:14 });
+            });
+            pptx.writeFile({ fileName: `Log_BPK.pptx` });
+        }
+
+        function exportNotepad() {
+            let text = tasks.map(t => `${t.date} | ${t.tFrom} | ${t.type} | ${t.note}`).join('\n');
+            const blob = new Blob([text], {type:"text/plain"});
+            const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`Notepad_Log.txt`; a.click();
+        }
+
+        function shareToNotes() {
+            const text = tasks.map(t => `${t.date}: ${t.note}`).join('\n');
+            if (navigator.share) {
+                navigator.share({ title: 'Log BPK', text: text });
+            } else {
+                Swal.fire('Info', 'Sila gunakan export Word di peranti ini.', 'info');
+            }
+        }
+
+        function exportCSV() {
+            const csv = tasks.map(t => Object.values(t).join(",")).join("\n");
+            const blob = new Blob([csv], {type:"text/csv"});
+            const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`AccessDB.csv`; a.click();
+        }
+
+        // --- UTILS ---
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('realTime').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+            document.getElementById('realDate').textContent = now.toLocaleDateString('ms-MY');
+            document.getElementById('realDay').textContent = ["AHAD","ISNIN","SELASA","RABU","KHAMIS","JUMAAT","SABTU"][now.getDay()];
+        }, 1000);
+
+        flatpickr("#datePicker", { dateFormat: "d-m-Y" });
+        ['#timeFrom','#timeSemasa','#timeTo'].forEach(id => flatpickr(id, { enableTime:true, noCalendar:true, dateFormat: "h:i K" }));
+        
+        async function deleteEntry(docId) {
+            const res = await Swal.fire({ title: 'Padam Permanen?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', background: '#0f172a', color: '#fff' });
+            if(res.isConfirmed) await db.collection("users").doc(currentUser.uid).collection("logs").doc(docId).delete();
         }
 
         function showDetails(t) {
@@ -433,30 +513,16 @@
                     <div class="grid grid-cols-3 gap-2 text-center bg-black/40 p-3 rounded-xl font-digital text-[9px]">
                         <div><span class="opacity-30 uppercase">Dari</span><br>${t.tFrom}</div>
                         <div><span class="opacity-30 uppercase">Trans</span><br>${t.tSemasa}</div>
-                        <div><span class="opacity-30 uppercase">Ke</span><br>${t.tTo}</div>
+                        <div><span class="opacity-30 uppercase">Hingga</span><br>${t.tTo}</div>
                     </div>
-                    <div class="bg-white/5 p-4 rounded-xl border border-white/5"><p class="text-blue-400 font-bold uppercase text-[9px]">📍 Laluan:</p><p class="text-sm font-bold mt-1">${t.from} → ${t.sLoc} → ${t.to}</p></div>
-                    ${t.type !== 'tugas' ? `<div class="bg-green-500/10 p-4 rounded-xl border border-green-500/20 flex justify-between"><div><p class="text-green-400 font-bold uppercase text-[9px]">Odometer</p><p class="text-sm font-digital">${t.odo} KM</p></div><div><p class="text-yellow-500 font-bold uppercase text-[9px]">Jarak KM</p><p class="text-sm font-digital">+${t.distance} KM</p></div></div>` : ''}
+                    <div class="bg-white/5 p-4 rounded-xl border border-white/5"><p class="text-blue-400 font-bold uppercase text-[9px]">📍 Laluan:</p><p class="text-sm font-bold mt-1 text-white">${t.from} → ${t.sLoc} → ${t.to}</p></div>
+                    ${t.type !== 'tugas' ? `<div class="bg-green-500/10 p-4 rounded-xl border border-green-500/20 flex justify-between"><div><p class="text-green-400 font-bold uppercase text-[9px]">Odometer</p><p class="text-sm font-digital">${t.odo} KM</p></div><div><p class="text-yellow-500 font-bold uppercase text-[9px]">Beza Jarak</p><p class="text-sm font-digital">+${t.distance} KM</p></div></div>` : ''}
                     ${t.type === 'minyak' ? `<div class="bg-red-500/10 p-4 rounded-xl border border-red-500/20"><p class="text-red-400 font-bold uppercase text-[9px]">Isian Minyak</p><p class="text-sm font-bold">RM ${t.fuelAmount} (${t.fuelType})</p></div>` : ''}
-                    <div class="p-4 bg-white/5 rounded-xl italic text-sm border border-white/10">${t.note}</div>
+                    <div class="p-4 bg-white/5 rounded-xl italic text-sm border border-white/10 leading-relaxed">${t.note}</div>
                 </div>`
             });
         }
 
-        async function deleteEntry(docId) {
-            const res = await Swal.fire({ title: 'Padam Permanen?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', background: '#0f172a', color: '#fff' });
-            if(res.isConfirmed) await db.collection("users").doc(currentUser.uid).collection("logs").doc(docId).delete();
-        }
-
-        setInterval(() => {
-            const now = new Date();
-            document.getElementById('realTime').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-            document.getElementById('realDate').textContent = now.toLocaleDateString('ms-MY');
-            document.getElementById('realDay').textContent = ["AHAD","ISNIN","SELASA","RABU","KHAMIS","JUMAAT","SABTU"][now.getDay()];
-        }, 1000);
-
-        flatpickr("#datePicker", { dateFormat: "d-m-Y" });
-        ['#timeFrom','#timeSemasa','#timeTo'].forEach(id => flatpickr(id, { enableTime:true, noCalendar:true, dateFormat: "h:i K" }));
         setType('tugas');
     </script>
 </body>
