@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BPK Command Master | v15.0.0</title>
+    <title>BPK Command Center | v16.0 Official</title>
     
     <link rel="icon" type="image/png" href="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png">
 
-    <!-- Frameworks -->
+    <!-- Stylesheets -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
 
-    <!-- Export Libraries -->
+    <!-- PDF/Excel/PPT Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
@@ -57,7 +57,7 @@
             background: rgba(0, 0, 0, 0.7) !important;
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
-            padding: 10px;
+            padding: 12px;
             color: #ffffff !important;
             font-size: 0.85rem;
             width: 100%;
@@ -73,32 +73,27 @@
             display: block;
         }
 
-        /* Official Report PDF Template Styles */
+        /* --- PDF Report Stying (Invisible on screen) --- */
         #reportTemplate {
             color: black;
             background: white;
-            width: 800px;
+            width: 1000px;
             position: absolute;
             left: -9999px;
             padding: 50px;
         }
-        .report-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 3px double #1a365d;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-        .report-watermark {
+        .pdf-watermark {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 450px;
-            opacity: 0.06;
+            width: 500px;
+            opacity: 0.08;
             z-index: 0;
         }
-        .report-content { position: relative; z-index: 1; }
+        .pdf-content { position: relative; z-index: 1; }
+        .pdf-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 10px; }
+        .pdf-table th, .pdf-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        .pdf-table th { background-color: #1a365d; color: white; text-transform: uppercase; }
 
         .hidden { display: none !important; }
         ::-webkit-scrollbar { width: 5px; }
@@ -107,6 +102,7 @@
 </head>
 <body class="p-3 md:p-6">
 
+    <!-- Watermark Web Page -->
     <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 opacity-[0.03] pointer-events-none -z-10">
 
     <div id="mainApp">
@@ -116,8 +112,8 @@
                 <div class="flex items-center gap-4">
                     <img src="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png" class="h-10 lg:h-14 rounded-lg">
                     <div class="flex flex-col">
-                        <h1 class="text-white text-sm lg:text-lg font-extrabold uppercase leading-none tracking-tight">BPK VETERINAR <span class="text-blue-500 font-mono text-xs">v15.0</span></h1>
-                        <p class="text-[9px] text-blue-400 font-bold uppercase tracking-[0.2em] mt-1">Standalone Enterprise Suite</p>
+                        <h1 class="text-white text-sm lg:text-lg font-extrabold uppercase leading-none tracking-tight">BPK VETERINAR <span class="text-blue-500 font-mono text-xs">v16.0</span></h1>
+                        <p class="text-[9px] text-blue-400 font-bold uppercase tracking-[0.2em] mt-1">Official Governance Center</p>
                     </div>
                 </div>
 
@@ -139,7 +135,7 @@
                 <!-- Borang Input -->
                 <div class="lg:col-span-4 space-y-6">
                     <div class="glass p-6 border-t-4 border-blue-500 shadow-xl">
-                        <div class="mb-6 flex bg-black/50 p-1.5 rounded-xl border border-white/5 shadow-inner">
+                        <div class="mb-6 flex bg-black/50 p-1.5 rounded-xl border border-white/5">
                             <button onclick="setType('tugas')" id="btnTugas" class="flex-1 py-2 text-[10px] font-bold rounded-lg transition-all bg-blue-600 text-white uppercase shadow-lg">Tugas</button>
                             <button onclick="setType('log')" id="btnLog" class="flex-1 py-2 text-[10px] font-bold rounded-lg transition-all text-white/40 uppercase">Gerak</button>
                             <button onclick="setType('minyak')" id="btnMinyak" class="flex-1 py-2 text-[10px] font-bold rounded-lg transition-all text-white/40 uppercase">Minyak</button>
@@ -147,31 +143,31 @@
                         
                         <div class="space-y-4">
                             <div>
-                                <label class="label-pro">Tarikh Rekod</label>
+                                <label class="label-pro">Tarikh Log</label>
                                 <input type="text" id="datePicker" class="input-field" placeholder="Pilih Tarikh">
                             </div>
 
                             <div class="grid grid-cols-3 gap-2">
-                                <div><label class="label-pro">Mula</label><input type="text" id="timeFrom" class="input-field font-digital text-center"></div>
-                                <div><label class="label-pro">Trans</label><input type="text" id="timeSemasa" class="input-field font-digital text-center"></div>
-                                <div><label class="label-pro">Akhir</label><input type="text" id="timeTo" class="input-field font-digital text-center"></div>
+                                <div><label class="label-pro text-[8px]">Mula</label><input type="text" id="timeFrom" class="input-field font-digital text-center"></div>
+                                <div><label class="label-pro text-[8px]">Trans</label><input type="text" id="timeSemasa" class="input-field font-digital text-center"></div>
+                                <div><label class="label-pro text-[8px]">Akhir</label><input type="text" id="timeTo" class="input-field font-digital text-center"></div>
                             </div>
 
-                            <!-- Borang Gerak (Fixed) -->
+                            <!-- Odometer Tab (Gerak) -->
                             <div id="odoFields" class="hidden space-y-4">
-                                <label class="label-pro text-green-400">Pengiraan KM Odometer</label>
+                                <label class="label-pro text-green-400">Pengisian Odometer (KM)</label>
                                 <div class="grid grid-cols-2 gap-3">
-                                    <input type="number" id="odoStart" class="input-field border-green-500/30" placeholder="Terakhir">
-                                    <input type="number" id="odoEnd" class="input-field border-green-500/30" placeholder="Semasa">
+                                    <input type="number" id="odoStart" class="input-field border-green-500/30" placeholder="Odo Terakhir">
+                                    <input type="number" id="odoEnd" class="input-field border-green-500/30" placeholder="Odo Semasa">
                                 </div>
                             </div>
 
-                            <!-- Borang Minyak (Fixed) -->
+                            <!-- Fuel Tab (Minyak) -->
                             <div id="fuelFields" class="hidden space-y-4">
-                                <label class="label-pro text-red-400">Isian Kos Minyak (RM)</label>
+                                <label class="label-pro text-red-400">Kos Minyak (RM)</label>
                                 <div class="grid grid-cols-2 gap-3">
                                     <input type="number" id="rmInitial" class="input-field border-red-500/30" placeholder="RM Semasa">
-                                    <input type="number" id="rmOffice" class="input-field border-red-500/30" placeholder="RM Balik Pej">
+                                    <input type="number" id="rmOffice" class="input-field border-red-500/30" placeholder="RM Balik">
                                 </div>
                                 <select id="fuelType" class="input-field">
                                     <option value="RON 95">RON 95</option>
@@ -181,47 +177,49 @@
                             </div>
 
                             <div>
-                                <label class="label-pro">Butiran Tugasan / Catatan Laluan</label>
-                                <textarea id="taskInput" rows="3" class="input-field" placeholder="Keterangan perincian tugas..."></textarea>
+                                <label class="label-pro">Butiran / Laluan (Mula - Ke)</label>
+                                <textarea id="taskInput" rows="3" class="input-field" placeholder="Catatan perincian tugas korporat..."></textarea>
                             </div>
                             
-                            <button onclick="saveEntry()" class="w-full btn-3d py-4 text-xs font-extrabold uppercase tracking-widest text-white mt-2 shadow-blue-500/20">Simpan Log & Analisis 💾</button>
+                            <button onclick="saveEntry()" class="w-full btn-3d py-4 text-xs font-extrabold uppercase tracking-widest text-white mt-2 shadow-blue-500/20">Simpan & Hitung Penyata 💾</button>
                         </div>
                     </div>
 
                     <!-- MULTI-EXPORT HUB -->
                     <div class="glass p-5 border-l-4 border-yellow-500 shadow-xl">
-                        <button onclick="generateOfficialPDF()" class="w-full btn-3d bg-red-600/80 text-[10px] py-4 rounded-xl uppercase border border-red-500/30 mb-4 font-bold">📄 PDF Penyata Rasmi (HQ)</button>
-                        <div class="grid grid-cols-3 gap-2 mb-3">
-                            <button onclick="exportWord()" class="btn-3d bg-blue-700/50 text-[8px] py-2 rounded uppercase font-bold text-white">Word</button>
-                            <button onclick="exportExcel()" class="btn-3d bg-green-700/50 text-[8px] py-2 rounded uppercase font-bold text-white">Excel</button>
-                            <button onclick="exportPPT()" class="btn-3d bg-orange-700/50 text-[8px] py-2 rounded uppercase font-bold text-white">PPT</button>
+                        <button onclick="generateOfficialPDF()" class="w-full btn-3d bg-red-600/50 text-[10px] py-4 rounded-xl uppercase border border-red-500/30 mb-4 font-bold">📄 Download PDF Penyata Rasmi</button>
+                        <div class="grid grid-cols-2 gap-2 mb-3">
+                            <button onclick="exportWord()" class="btn-3d bg-blue-700/50 text-[9px] py-2 rounded uppercase font-bold text-white">Word</button>
+                            <button onclick="exportExcel()" class="btn-3d bg-green-700/50 text-[9px] py-2 rounded uppercase font-bold text-white">Excel</button>
+                            <button onclick="exportPPT()" class="btn-3d bg-orange-700/50 text-[9px] py-2 rounded uppercase font-bold text-white">PPT</button>
+                            <button onclick="exportNotepad()" class="btn-3d bg-gray-700/50 text-[9px] py-2 rounded uppercase font-bold text-white">Notepad</button>
                         </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <button onclick="exportNotepad()" class="btn-3d bg-gray-600/50 text-[8px] py-2 rounded uppercase font-bold text-white">Notepad</button>
-                            <button onclick="shareToNotes()" class="btn-3d bg-indigo-700/50 text-[8px] py-2 rounded uppercase font-bold text-white">📱 Mobile Notes</button>
-                        </div>
+                        <button onclick="shareToNotes()" class="w-full btn-3d bg-indigo-700/50 text-[9px] py-2 rounded uppercase font-bold text-white">📱 Share to Mobile Notes</button>
                     </div>
                 </div>
 
                 <!-- LIVE FEED -->
                 <div class="lg:col-span-8">
-                    <div class="glass flex flex-col min-h-[650px] shadow-2xl overflow-hidden border-b-4 border-blue-500/30">
+                    <div class="glass flex flex-col min-h-[600px] shadow-2xl overflow-hidden border-b-4 border-blue-500/30">
                         <div class="p-5 bg-white/5 border-b border-white/5 flex flex-wrap justify-between items-center gap-4">
-                            <h3 class="font-bold uppercase tracking-widest text-[11px] text-blue-300">Aktiviti Semasa</h3>
-                            <button onclick="showMonthSummary()" class="text-[10px] bg-yellow-500/20 text-yellow-400 px-4 py-1 rounded-full font-bold border border-yellow-500/30 uppercase tracking-tighter">Analisis Ringkasan</button>
+                            <h3 class="font-bold uppercase tracking-widest text-[11px] text-blue-300">Live Activity Feed</h3>
+                            <button onclick="showMonthSummary()" class="text-[10px] bg-yellow-500/20 text-yellow-400 px-4 py-1 rounded-full font-bold border border-yellow-500/30 uppercase tracking-tighter">Analitik Bulanan</button>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-sm">
                                 <thead class="bg-black/30 text-[9px] uppercase text-white/40 tracking-[0.2em] border-b border-white/5">
                                     <tr>
-                                        <th class="p-5">Waktu/Fasa</th>
-                                        <th class="p-5">Butiran & Analisis</th>
+                                        <th class="p-5">Tarikh/Waktu</th>
+                                        <th class="p-5">Butiran Log & Hasil Kiraan</th>
                                         <th class="p-5 text-right">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="activeBody" class="divide-y divide-white/5 text-white"></tbody>
                             </table>
+                            <div id="activeEmpty" class="p-20 text-center opacity-20 hidden">
+                                <p class="text-6xl mb-4 font-bold">📂</p>
+                                <p class="text-xs font-bold uppercase tracking-widest text-white">Log Kosong</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -229,31 +227,31 @@
         </main>
     </div>
 
-    <!-- PENYATA RASMI TEMPLATE (OFF-SCREEN) -->
+    <!-- PENYATA RASMI LETTERHEAD (OFF-SCREEN) -->
     <div id="reportTemplate">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" class="report-watermark">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" class="pdf-watermark">
         
-        <div class="report-content">
-            <div class="report-header">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" width="85">
+        <div class="pdf-content">
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 4px double #1a365d; padding-bottom: 20px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" width="95">
                 <div style="text-align: center; flex-grow: 1; padding: 0 20px;">
-                    <h2 style="margin:0; font-size: 19px; font-weight: 900; color: #1a365d; text-transform: uppercase;">Jabatan Perkhidmatan Veterinar</h2>
+                    <h2 style="margin:0; font-size: 20px; font-weight: 900; color: #1a365d; text-transform: uppercase;">Jabatan Perkhidmatan Veterinar</h2>
                     <h3 style="margin:5px 0; font-size: 13px; font-weight: 700; color: #2d3748; text-transform: uppercase;">Kementerian Pertanian dan Keterjaminan Makanan</h3>
                     <p style="margin:0; font-size: 10px; text-transform: uppercase; color: #4a5568; font-weight: bold;">Bahagian Penguat Kuasa Veterinar (BPK)</p>
                 </div>
-                <img src="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png" width="85">
+                <img src="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png" width="95">
             </div>
 
-            <h3 style="text-align: center; text-decoration: underline; margin-top: 30px; font-size: 15px; font-weight: bold; color: #1a365d;">PENYATA BULANAN PERGERAKAN, TUGASAN & PENGGUNAAN MINYAK</h3>
-            <p style="text-align: center; font-size: 11px; font-weight: bold; margin-bottom: 20px;">BULAN: <span id="pdfMonthHeader"></span></p>
+            <h3 style="text-align: center; text-decoration: underline; margin-top: 30px; font-size: 16px; color: #1a365d; font-weight: 900; text-transform: uppercase;">Penyata Bulanan Pergerakan, Tugasan & Kos Bahan Api</h3>
+            <p style="text-align: center; font-size: 12px; font-weight: bold; margin-bottom: 20px;">RINGKASAN REKOD: <span id="pdfMonthLabel"></span></p>
 
-            <div id="pdfContent"></div>
+            <div id="pdfContentArea"></div>
 
-            <div style="margin-top: 50px; display: flex; justify-content: space-between; font-size: 10px;">
+            <div style="margin-top: 50px; display: flex; justify-content: space-between; font-size: 11px;">
                 <div style="line-height: 2;">
-                    <div style="background: #e8f4ff; padding: 10px; border-radius: 8px; border-left: 5px solid #3b82f6;">
+                    <div style="background: #f1f5f9; padding: 10px; border-radius: 8px; border-left: 5px solid #3b82f6;">
                         <p>JUMLAH KESELURUHAN JARAK: <span id="pdfTotalKM" style="font-weight:bold; color: #1e40af;"></span> KM</p>
-                        <p>JUMLAH KESELURUHAN KOS MINYAK: RM <span id="pdfTotalRM" style="font-weight:bold; color: #b91c1c;"></span></p>
+                        <p>JUMLAH KESELURUHAN MINYAK: RM <span id="pdfTotalRM" style="font-weight:bold; color: #b91c1c;"></span></p>
                     </div>
                     <p style="margin-top: 10px;">TARIKH CETAKAN: <span id="pdfPrintDate"></span></p>
                 </div>
@@ -271,8 +269,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        // --- DATA ENGINE ---
-        let tasks = JSON.parse(localStorage.getItem('bpk_v15_local_db')) || [];
+        // --- DATA ENGINE (STANDALONE LOCAL STORAGE) ---
+        let tasks = JSON.parse(localStorage.getItem('bpk_v16_local_data')) || [];
 
         function setType(type) {
             window.currentType = type;
@@ -299,7 +297,7 @@
         async function saveEntry() {
             const date = document.getElementById('datePicker').value;
             const tFrom = document.getElementById('timeFrom').value;
-            if(!date || !tFrom) return Swal.fire('Ralat', 'Tarikh & Masa Wajib', 'error');
+            if(!date || !tFrom) return Swal.fire('Ralat', 'Tarikh & Masa wajib diisi.', 'error');
 
             const oStart = parseFloat(document.getElementById('odoStart').value) || 0;
             const oEnd = parseFloat(document.getElementById('odoEnd').value) || 0;
@@ -321,18 +319,21 @@
             };
 
             tasks.push(newEntry);
-            localStorage.setItem('bpk_v15_local_db', JSON.stringify(tasks));
+            localStorage.setItem('bpk_v16_local_data', JSON.stringify(tasks));
             renderUI();
 
             ['datePicker','timeFrom','timeSemasa','timeTo','odoStart','odoEnd','rmInitial','rmOffice','taskInput'].forEach(id => {
                 if(document.getElementById(id)) document.getElementById(id).value = '';
             });
-            Swal.fire({ icon: 'success', title: 'Data Berhasil Disimpan', timer: 1000, showConfirmButton: false });
+            Swal.fire({ icon: 'success', title: 'Rekod Berjaya Disimpan', timer: 1000, showConfirmButton: false });
         }
 
         function renderUI() {
             const body = document.getElementById('activeBody');
             body.innerHTML = '';
+            if(tasks.length === 0) { document.getElementById('activeEmpty').classList.remove('hidden'); return; }
+            document.getElementById('activeEmpty').classList.add('hidden');
+
             const grouped = tasks.reduce((acc, t) => {
                 acc[t.date] = acc[t.date] || [];
                 acc[t.date].push(t);
@@ -347,7 +348,7 @@
                 const header = document.createElement('tr');
                 header.className = "clickable-header bg-blue-500/10 border-l-4 border-blue-500 shadow-lg";
                 header.onclick = () => showDaySummary(date);
-                header.innerHTML = `<td colspan="3" class="p-3 text-[10px] font-extrabold uppercase text-blue-300 font-digital">📅 ${date} (${dayTasks[0].day}) <span class="ml-2 opacity-50 italic">[Klik Penyatuan]</span></td>`;
+                header.innerHTML = `<td colspan="3" class="p-3 text-[10px] font-extrabold uppercase text-blue-300 font-digital">📅 ${date} (${dayTasks[0].day}) <span class="ml-2 opacity-50 italic">[Summary]</span></td>`;
                 body.appendChild(header);
 
                 dayTasks.forEach(t => {
@@ -355,13 +356,13 @@
                     tr.className = "hover:bg-white/5 border-b border-white/5 transition cursor-pointer";
                     tr.onclick = () => showDetails(t);
                     tr.innerHTML = `
-                        <td class="p-4 font-digital ${t.type==='log'?'text-green-400':t.type==='minyak'?'text-red-400':'text-white'} text-[10px]">
+                        <td class="p-4 font-digital ${t.type==='log'?'text-green-500':t.type==='minyak'?'text-red-400':'text-white'} text-[10px]">
                             ${t.tFrom} → ${t.tTo}
                         </td>
                         <td class="p-4">
                             <div class="font-medium text-[12px]">${t.note}</div>
                             ${t.dist > 0 ? `<div class="text-[9px] text-green-500 font-bold uppercase mt-1">KM: +${t.dist} | ODO: ${t.odoEnd}</div>` : ''}
-                            ${t.rmMinyak > 0 ? `<div class="text-[9px] text-red-400 font-extrabold mt-1 uppercase">MINYAK: RM ${t.rmMinyak.toFixed(2)} (${t.fuelType})</div>` : ''}
+                            ${t.rmMinyak > 0 ? `<div class="text-[9px] text-red-400 font-extrabold mt-1">MINYAK: RM ${t.rmMinyak.toFixed(2)} (${t.fuelType})</div>` : ''}
                         </td>
                         <td class="p-4 text-right">
                             <button onclick="event.stopPropagation(); deleteEntry(${t.id})" class="text-red-500/30 hover:text-red-500 text-[9px] font-bold uppercase underline">Padam</button>
@@ -372,54 +373,79 @@
             });
         }
 
-        // --- OFFICIAL PDF GENERATOR ---
+        // --- OFFICIAL PDF DOWNLOAD ENGINE ---
         async function generateOfficialPDF() {
             const curMY = (new Date().getMonth()+1).toString().padStart(2,'0') + '-' + new Date().getFullYear();
             const monthData = [...tasks].filter(t => t.monthYear === curMY).reverse();
             const totalKM = monthData.reduce((s,t) => s + (t.dist || 0), 0);
             const totalRM = monthData.reduce((s,t) => s + (t.rmMinyak || 0), 0);
 
-            let tableHTML = `<table border="1" style="width:100%; border-collapse:collapse; margin-top:15px; font-size:9.5px; text-align:left;">
-                <thead style="background:#1a365d; color:white;"><tr>
-                    <th style="padding:10px;">TARIKH / HARI</th><th style="padding:10px;">MASA</th><th style="padding:10px;">BUTIRAN TUGASAN & LALUAN</th><th style="padding:10px; text-align:center;">JARAK (KM)</th><th style="padding:10px; text-align:center;">MINYAK (RM)</th>
+            let tableHTML = `<table class="pdf-table">
+                <thead><tr>
+                    <th>Tarikh / Hari</th><th>Masa</th><th>Butiran Tugasan & Laluan</th><th>Jarak (KM)</th><th>Minyak (RM)</th>
                 </tr></thead><tbody>`;
 
             monthData.forEach(t => {
                 tableHTML += `<tr>
-                    <td style="padding:8px;">${t.date}<br>(${t.day})</td>
-                    <td style="padding:8px;">${t.tFrom} - ${t.tTo}</td>
-                    <td style="padding:8px;"><b>${t.type.toUpperCase()}</b>: ${t.note}</td>
-                    <td style="padding:8px; text-align:center;">${t.dist > 0 ? t.dist : '-'}</td>
-                    <td style="padding:8px; text-align:center;">${t.rmMinyak > 0 ? t.rmMinyak.toFixed(2) : '-'}</td>
+                    <td>${t.date}<br>(${t.day})</td>
+                    <td>${t.tFrom} - ${t.tTo}</td>
+                    <td><b>${t.type.toUpperCase()}</b>: ${t.note}</td>
+                    <td style="text-align:center;">${t.dist > 0 ? t.dist : '-'}</td>
+                    <td style="text-align:center;">${t.rmMinyak > 0 ? t.rmMinyak.toFixed(2) : '-'}</td>
                 </tr>`;
             });
             tableHTML += `</tbody></table>`;
             
-            document.getElementById('pdfContent').innerHTML = tableHTML;
-            document.getElementById('pdfMonthHeader').innerText = curMY;
+            document.getElementById('pdfContentArea').innerHTML = tableHTML;
+            document.getElementById('pdfMonthLabel').innerText = curMY;
             document.getElementById('pdfTotalKM').innerText = totalKM;
             document.getElementById('pdfTotalRM').innerText = totalRM.toFixed(2);
             document.getElementById('pdfPrintDate').innerText = new Date().toLocaleString();
-            document.getElementById('pdfOfficerName').innerText = "PEGAWAI PENGUAT KUASA VETERINAR";
 
             const element = document.getElementById('reportTemplate');
-            html2pdf().set({ 
-                margin: 10, 
-                filename: `BPK_Penyata_${curMY}.pdf`, 
-                image: { type: 'jpeg', quality: 0.98 }, 
-                html2canvas: { scale: 3, useCORS: true }, 
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
-            }).from(element).save();
+            html2pdf().set({ margin: 10, filename: `Penyata_Official_BPK_${curMY}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(element).save();
         }
 
-        // --- OTHER EXPORTS ---
-        function exportExcel() { const ws = XLSX.utils.json_to_sheet(tasks); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Log"); XLSX.writeFile(wb, `BPK_Log.xlsx`); }
-        function exportWord() { let content = "LAPORAN LOG BPK\n\n"; tasks.forEach(t => content += `[${t.date}] ${t.tFrom}: ${t.note}\n`); const blob = new Blob([content], {type:"application/msword"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download=`Log_BPK.doc`; a.click(); }
-        function exportPPT() { let pptx = new PptxGenJS(); tasks.slice(0,10).forEach(t => { let slide = pptx.addSlide(); slide.addText(`LOG: ${t.date}`, {x:1, y:1, fontSize:24}); slide.addText(t.note, {x:1, y:2, fontSize:16}); }); pptx.writeFile({ fileName: `Log_BPK.pptx` }); }
-        function exportNotepad() { let txt = tasks.map(t => `${t.date} | ${t.type} | ${t.note}`).join('\n'); const blob = new Blob([txt], {type: "text/plain"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download=`Log_BPK.txt`; a.click(); }
-        function shareToNotes() { const text = tasks.slice(0,5).map(t => `${t.date}: ${t.note}`).join('\n'); if (navigator.share) navigator.share({ title: 'Log BPK', text: text }); else alert('Gunakan Desktop untuk muat turun Word.'); }
+        // --- MULTI-FORMAT EXPORTS ---
+        function exportExcel() {
+            const worksheet = XLSX.utils.json_to_sheet(tasks);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "LogData");
+            XLSX.writeFile(workbook, `BPK_Log_Data.xlsx`);
+        }
 
-        // --- CLOCK ---
+        function exportWord() {
+            let content = "<html><body><h2 style='text-align:center'>LAPORAN LOG BPK VETERINAR</h2>";
+            tasks.forEach(t => content += `<p><b>${t.date} (${t.day})</b> | ${t.tFrom} | ${t.type.toUpperCase()}: ${t.note} (KM: ${t.dist} | RM: ${t.rmMinyak})</p>`);
+            content += "</body></html>";
+            const blob = new Blob(['\ufeff', content], {type:"application/msword"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href=url; a.download=`Log_BPK_Word.doc`; a.click();
+        }
+
+        function exportPPT() {
+            let pptx = new PptxGenJS();
+            tasks.slice(0,10).forEach(t => {
+                let slide = pptx.addSlide();
+                slide.addText(`LOG BPK: ${t.date}`, { x:0.5, y:0.5, fontSize:24, bold:true, color:'0072ff' });
+                slide.addText(t.note, { x:0.5, y:2, fontSize:18 });
+            });
+            pptx.writeFile({ fileName: `BPK_Log.pptx` });
+        }
+
+        function exportNotepad() {
+            let text = tasks.map(t => `${t.date} | ${t.type.toUpperCase()} | ${t.note} | RM:${t.rmMinyak} | KM:${t.dist}`).join('\n');
+            const blob = new Blob([text], {type: "text/plain"});
+            const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`Log_BPK.txt`; a.click();
+        }
+
+        function shareToNotes() {
+            const text = tasks.slice(0,5).map(t => `${t.date}: ${t.note}`).join('\n');
+            if (navigator.share) navigator.share({ title: 'Log BPK', text: text });
+            else alert('Gunakan peranti mudah alih untuk Share Notes.');
+        }
+
+        // --- UTILS ---
         setInterval(() => {
             const now = new Date();
             document.getElementById('realTime').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
@@ -433,8 +459,8 @@
             const tRM = dayRecords.reduce((s,t) => s + (t.rmMinyak || 0), 0);
             Swal.fire({
                 customClass:{popup:'swal-glass'},
-                title:`Analisis: ${date}`,
-                html:`<div class="grid grid-cols-2 gap-3"><div class="bg-red-500/10 p-4 rounded-xl text-center"><p class="text-[9px] uppercase font-bold text-red-400">Minyak (RM)</p><p class="text-xl font-bold">RM ${tRM.toFixed(2)}</p></div><div class="bg-green-500/10 p-4 rounded-xl text-center"><p class="text-[9px] uppercase font-bold text-green-400">Jarak (KM)</p><p class="text-xl font-bold">${tKM} KM</p></div></div>`
+                title:`Summary: ${date}`,
+                html:`<div class="grid grid-cols-2 gap-3 mb-6"><div class="bg-red-500/10 p-4 rounded-xl text-center"><p class="text-[9px] uppercase font-bold text-red-400">Minyak (RM)</p><p class="text-xl font-bold">RM ${tRM.toFixed(2)}</p></div><div class="bg-green-500/10 p-4 rounded-xl text-center"><p class="text-[9px] uppercase font-bold text-green-400">Jarak (KM)</p><p class="text-xl font-bold">${tKM} KM</p></div></div>`
             });
         }
 
@@ -445,8 +471,8 @@
             const tKM = monthData.reduce((s,t) => s + (t.dist || 0), 0);
             Swal.fire({
                 customClass:{popup:'swal-glass'},
-                title:`Dashboard Bulanan`,
-                html:`<div class="grid grid-cols-2 gap-3 mb-4"><div class="bg-red-500/20 p-5 rounded-2xl"><p class="text-[9px] font-bold text-red-400 uppercase">Kos Minyak</p><p class="text-2xl font-bold">RM ${tRM.toFixed(2)}</p></div><div class="bg-green-500/20 p-5 rounded-2xl"><p class="text-[9px] font-bold text-green-400 uppercase">Total KM</p><p class="text-2xl font-bold">${tKM} KM</p></div></div>`
+                title:`Analitik Bulanan`,
+                html:`<div class="grid grid-cols-2 gap-3 mb-4"><div class="bg-red-500/20 p-5 rounded-2xl"><p class="text-[9px] font-bold text-red-400 uppercase">Perbelanjaan</p><p class="text-2xl font-bold">RM ${tRM.toFixed(2)}</p></div><div class="bg-green-500/20 p-5 rounded-2xl"><p class="text-[9px] font-bold text-green-400 uppercase">Jarak</p><p class="text-2xl font-bold">${tKM} KM</p></div></div>`
             });
         }
 
@@ -458,7 +484,7 @@
                     <div class="grid grid-cols-3 gap-2 text-center bg-black/40 p-3 rounded-xl font-digital text-[9px]">
                         <div><span class="opacity-30 uppercase">Dari</span><br>${t.tFrom}</div>
                         <div><span class="opacity-30 uppercase">Transit</span><br>${t.tSemasa}</div>
-                        <div><span class="opacity-30 uppercase">Ke</span><br>${t.tTo}</div>
+                        <div><span class="opacity-30 uppercase">Akhir</span><br>${t.tTo}</div>
                     </div>
                     ${t.odoEnd > 0 ? `<div class="bg-green-500/10 p-4 rounded-xl border border-green-500/20 flex justify-between"><div><p class="text-green-400 font-bold text-[9px] uppercase">Odo: ${t.odoStart} → ${t.odoEnd}</p></div><div><p class="text-yellow-500 font-bold text-[11px] uppercase">+${t.dist} KM</p></div></div>` : ''}
                     ${t.rmMinyak > 0 ? `<div class="bg-red-500/10 p-4 rounded-xl border border-red-500/20 text-center font-bold">MINYAK: RM ${t.rmMinyak.toFixed(2)} (${t.fuelType})</div>` : ''}
@@ -472,7 +498,7 @@
             Swal.fire({ title: 'Padam?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444' }).then(res => {
                 if(res.isConfirmed) {
                     tasks = tasks.filter(x => x.id !== id);
-                    localStorage.setItem('bpk_v15_local_db', JSON.stringify(tasks));
+                    localStorage.setItem('bpk_v16_local_data', JSON.stringify(tasks));
                     renderUI();
                 }
             });
@@ -480,7 +506,10 @@
 
         flatpickr("#datePicker", { dateFormat: "d-m-Y" });
         ['#timeFrom','#timeSemasa','#timeTo'].forEach(id => flatpickr(id, { enableTime:true, noCalendar:true, dateFormat: "h:i K" }));
-        window.currentType = 'tugas'; renderUI(); setType('tugas');
+        
+        window.currentType = 'tugas';
+        renderUI();
+        setType('tugas');
     </script>
 </body>
 </html>
