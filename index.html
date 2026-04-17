@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BPK Command Pro | v3.0.4</title>
+    <title>BPK Command Pro | v3.0.5</title>
     
+    <!-- FAVICON -->
     <link rel="icon" type="image/png" href="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png">
 
     <!-- Frameworks -->
@@ -53,15 +54,17 @@
         .btn-3d:active { transform: translateY(2px); box-shadow: 0 1px 0 #1e40af; }
 
         .input-field {
-            background: rgba(0, 0, 0, 0.5) !important;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.6) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
-            padding: 10px;
-            color: white !important;
-            font-size: 0.85rem;
+            padding: 12px;
+            color: #ffffff !important;
+            font-size: 0.9rem;
             width: 100%;
             outline: none;
+            transition: 0.3s;
         }
+        .input-field:focus { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
 
         .label-pro {
             font-size: 10px;
@@ -69,7 +72,8 @@
             text-transform: uppercase;
             color: rgba(255,255,255,0.4);
             margin-bottom: 4px;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            display: block;
         }
 
         #loginScreen {
@@ -85,8 +89,7 @@
             backdrop-filter: blur(25px) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             border-radius: 30px !important;
-            width: 95% !important;
-            max-width: 800px !important;
+            color: white !important;
         }
 
         .hidden { display: none !important; }
@@ -96,64 +99,60 @@
 </head>
 <body class="p-3 md:p-6">
 
-    <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 opacity-[0.03] pointer-events-none -z-10">
-
-    <!-- LOGIN -->
+    <!-- LOGIN SCREEN -->
     <div id="loginScreen">
         <div class="glass p-10 max-w-sm w-full text-center border-t-4 border-blue-500 shadow-2xl" data-aos="zoom-in">
             <img src="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png" class="h-24 mx-auto mb-6">
             <h2 class="text-2xl font-extrabold uppercase tracking-widest mb-1">BPK CLOUD</h2>
-            <p class="text-[10px] text-blue-400 mb-8 uppercase tracking-widest font-bold">Smart Management Center v3.0.4</p>
+            <p class="text-[10px] text-blue-400 mb-8 uppercase tracking-widest font-bold">Pro Dashboard v3.0.5</p>
             <button onclick="login()" class="flex items-center justify-center gap-4 w-full py-4 px-6 rounded-2xl font-bold text-sm transition-all border border-white/10 bg-white/5 hover:bg-white/10 shadow-xl">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="h-6">
-                <span>LOGIN GOOGLE</span>
+                <span>MASUK DENGAN GOOGLE</span>
             </button>
         </div>
     </div>
 
     <!-- MAIN APP -->
     <div id="mainApp" class="hidden">
+        
         <header class="container mx-auto mb-8" data-aos="fade-down">
-            <div class="glass p-4 flex flex-wrap justify-between items-center gap-6 shadow-2xl">
+            <div class="glass p-4 flex flex-wrap justify-between items-center gap-6 shadow-2xl border-b border-white/10">
                 <div class="flex items-center gap-4">
                     <img src="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png" class="h-10 lg:h-12 rounded-lg">
                     <div class="flex flex-col">
                         <h1 class="text-white text-sm lg:text-lg font-extrabold uppercase leading-none tracking-tight">BPK VETERINAR</h1>
                         <div class="flex items-center gap-2 mt-1">
-                            <img id="userAvatar" class="h-4 w-4 rounded-full">
+                            <img id="userAvatar" class="h-4 w-4 rounded-full border border-white/20">
                             <span id="userName" class="text-[9px] text-blue-400 font-bold uppercase tracking-widest">---</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- DIGITAL CLOCK -->
-                <div class="flex items-center gap-4 bg-black/40 px-6 py-2 rounded-2xl border border-white/5 shadow-inner">
+                <!-- DIGITAL CLOCK (FIXED 12H) -->
+                <div class="flex items-center gap-4 bg-black/40 px-6 py-3 rounded-2xl border border-white/5 shadow-inner">
                     <div class="flex flex-col items-center">
-                        <div class="flex items-baseline gap-1">
-                            <span id="realTime" class="text-xl md:text-3xl font-digital font-bold text-blue-400">00:00:00</span>
-                            <span id="realAMPM" class="text-[10px] font-bold text-white/30 uppercase">AM</span>
-                        </div>
+                        <h1 id="realTime" class="text-xl md:text-3xl font-digital font-bold text-blue-400">00:00:00 AM</h1>
                     </div>
-                    <div class="h-6 w-[1px] bg-white/10"></div>
+                    <div class="h-8 w-[1px] bg-white/10"></div>
                     <div class="flex flex-col text-left font-bold">
                         <p id="realDay" class="text-[10px] text-blue-500 uppercase tracking-widest leading-none">---</p>
                         <p id="realDate" class="text-[9px] text-white/40 font-medium leading-none mt-1 uppercase">--/--/----</p>
                     </div>
                 </div>
-                <button onclick="logout()" class="bg-red-500/10 border border-red-500/30 text-red-500 text-[9px] px-5 py-2 rounded-full font-bold uppercase tracking-widest hover:bg-red-600 hover:text-white transition">LOGOUT 🔒</button>
+                <button onclick="logout()" class="bg-red-500/10 border border-red-500/30 text-red-500 text-[9px] px-5 py-2 rounded-full font-bold hover:bg-red-600 hover:text-white transition">LOGOUT 🔒</button>
             </div>
         </header>
 
         <main class="container mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
-                <!-- LEFT SIDE: FORM -->
+                <!-- FORM INPUT -->
                 <div class="lg:col-span-4 space-y-6">
                     <div class="glass p-6 border-t-4 border-blue-500 shadow-xl">
                         <div class="mb-5 flex bg-black/50 p-1.5 rounded-xl border border-white/5">
-                            <button onclick="setType('tugas')" id="btnTugas" class="flex-1 py-2 text-[9px] font-bold rounded-lg transition-all bg-blue-600 text-white uppercase shadow-lg">Tugas</button>
-                            <button onclick="setType('log')" id="btnLog" class="flex-1 py-2 text-[9px] font-bold rounded-lg transition-all text-white/40 uppercase">Gerak</button>
-                            <button onclick="setType('minyak')" id="btnMinyak" class="flex-1 py-2 text-[9px] font-bold rounded-lg transition-all text-white/40 uppercase">Minyak</button>
+                            <button onclick="setType('tugas')" id="btnTugas" class="flex-1 py-2 text-[10px] font-bold rounded-lg transition-all bg-blue-600 text-white uppercase shadow-lg">Tugas</button>
+                            <button onclick="setType('log')" id="btnLog" class="flex-1 py-2 text-[10px] font-bold rounded-lg transition-all text-white/40 uppercase">Gerak</button>
+                            <button onclick="setType('minyak')" id="btnMinyak" class="flex-1 py-2 text-[10px] font-bold rounded-lg transition-all text-white/40 uppercase">Minyak</button>
                         </div>
                         
                         <div class="space-y-4">
@@ -163,62 +162,65 @@
                             </div>
 
                             <div class="grid grid-cols-3 gap-2">
-                                <div><label class="label-pro">Mula</label><input type="text" id="timeFrom" class="input-field font-digital text-center"></div>
-                                <div><label class="label-pro">Trans</label><input type="text" id="timeSemasa" class="input-field font-digital text-center"></div>
-                                <div><label class="label-pro">Akhir</label><input type="text" id="timeTo" class="input-field font-digital text-center"></div>
+                                <div><label class="label-pro">Dari</label><input type="text" id="timeFrom" class="input-field font-digital text-center"></div>
+                                <div><label class="label-pro">Semasa</label><input type="text" id="timeSemasa" class="input-field font-digital text-center"></div>
+                                <div><label class="label-pro">Hingga</label><input type="text" id="timeTo" class="input-field font-digital text-center"></div>
                             </div>
 
                             <!-- LOKASI (UNTUK TUGAS & GERAK) -->
                             <div id="locationGroup" class="space-y-4">
-                                <label class="label-pro">Laluan (Dari - Semasa - Ke)</label>
+                                <label class="label-pro">Laluan (Mula - Transit - Akhir)</label>
                                 <div class="grid grid-cols-3 gap-2">
-                                    <input type="text" id="fromLoc" class="input-field" placeholder="Mula">
-                                    <input type="text" id="sLoc" class="input-field" placeholder="Transit">
-                                    <input type="text" id="toLoc" class="input-field" placeholder="Ke">
+                                    <input type="text" id="fromLoc" class="input-field" placeholder="DARI">
+                                    <input type="text" id="sLoc" class="input-field" placeholder="SEMASA">
+                                    <input type="text" id="toLoc" class="input-field" placeholder="KE">
                                 </div>
                             </div>
 
                             <!-- ODOMETER (GERAK & MINYAK) -->
                             <div id="odoGroup" class="hidden">
-                                <label class="label-pro text-yellow-500">Odometer Terkini (KM)</label>
-                                <input type="number" id="odoVal" class="input-field border-yellow-500/30" placeholder="Contoh: 125800">
+                                <label class="label-pro text-yellow-500">Bacaan Odometer Semasa (KM)</label>
+                                <input type="number" id="odoVal" class="input-field border-yellow-500/30" placeholder="Contoh: 125840">
                             </div>
 
-                            <!-- MINYAK (MINYAK SAHAJA) -->
+                            <!-- MINYAK (SPECIFIC) -->
                             <div id="fuelGroup" class="hidden space-y-4">
                                 <div class="grid grid-cols-2 gap-3">
-                                    <div><label class="label-pro">Jenis</label>
+                                    <div>
+                                        <label class="label-pro">Jenis Minyak</label>
                                         <select id="fuelType" class="input-field">
                                             <option value="RON 95">RON 95</option>
                                             <option value="RON 97">RON 97</option>
                                             <option value="DIESEL">DIESEL</option>
                                         </select>
                                     </div>
-                                    <div><label class="label-pro">Jumlah RM</label><input type="number" id="fuelAmount" class="input-field" placeholder="0.00"></div>
+                                    <div>
+                                        <label class="label-pro text-red-400">Jumlah Isian (RM)</label>
+                                        <input type="number" id="fuelAmount" class="input-field border-red-500/30" placeholder="0.00">
+                                    </div>
                                 </div>
                             </div>
 
                             <div>
                                 <label class="label-pro">Butiran / Catatan</label>
-                                <textarea id="taskInput" rows="3" class="input-field" placeholder="Tulis catatan tugasan..."></textarea>
+                                <textarea id="taskInput" rows="3" class="input-field" placeholder="Tulis butiran di sini..."></textarea>
                             </div>
                             
                             <button onclick="saveEntry()" class="w-full btn-3d py-4 text-xs font-extrabold uppercase tracking-widest text-white mt-2">SIMPAN KE CLOUD 💾</button>
                         </div>
                     </div>
 
-                    <!-- ANALYTICS -->
-                    <div class="glass p-6 border-l-4 border-yellow-500 shadow-xl" data-aos="zoom-in">
-                        <h3 class="text-[10px] font-extrabold text-yellow-500 uppercase tracking-[0.3em] mb-4 text-center">Cloud Intelligence Report</h3>
-                        <button onclick="showMonthSummary()" class="w-full btn-3d bg-yellow-600/50 text-[10px] py-3 rounded-lg uppercase border border-yellow-500/30 mb-4">🔍 Ringkasan Bulanan (Lengkap)</button>
+                    <div class="glass p-5 border-l-4 border-yellow-500 shadow-xl" data-aos="zoom-in">
+                        <h3 class="text-[10px] font-extrabold text-yellow-500 uppercase tracking-[0.3em] mb-4 text-center">Intelligence Report Hub</h3>
+                        <button onclick="showMonthSummary()" class="w-full btn-3d bg-yellow-600/50 text-[10px] py-3 rounded-lg uppercase border border-yellow-500/30">🔍 Analisis Bulanan Lengkap</button>
                     </div>
                 </div>
 
-                <!-- RIGHT SIDE: LOG -->
+                <!-- LIVE FEED -->
                 <div class="lg:col-span-8">
-                    <div class="glass flex flex-col min-h-[600px] shadow-2xl overflow-hidden">
+                    <div class="glass flex flex-col min-h-[600px] shadow-2xl overflow-hidden border-b-4 border-blue-500/20">
                         <div class="p-5 bg-white/5 border-b border-white/5 flex flex-wrap justify-between items-center gap-4">
-                            <h3 class="font-bold uppercase tracking-widest text-[11px] text-blue-300">Live Activity Feed</h3>
+                            <h3 class="font-bold uppercase tracking-widest text-[11px] text-blue-300">Aktiviti Terkini (Live)</h3>
                             <div class="flex gap-4 text-[9px] font-bold uppercase tracking-widest">
                                 <span class="text-white">● Tugas</span>
                                 <span class="text-green-400">● Gerak</span>
@@ -231,28 +233,24 @@
                                 <thead class="bg-black/30 text-[9px] uppercase text-white/40 tracking-[0.2em] border-b border-white/5">
                                     <tr>
                                         <th class="p-5">Waktu Fasa</th>
-                                        <th class="p-5">Aktiviti / Laluan / Analisis</th>
-                                        <th class="p-5 text-right">Tindakan</th>
+                                        <th class="p-5">Butiran / Analisis Kewangan</th>
+                                        <th class="p-5 text-right">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="activeBody" class="divide-y divide-white/5 text-white"></tbody>
                             </table>
                             <div id="activeEmpty" class="p-20 text-center opacity-20 hidden">
                                 <p class="text-6xl mb-4">📂</p>
-                                <p class="text-xs font-bold uppercase tracking-widest">Tiada Rekod Dijumpai</p>
+                                <p class="text-xs font-bold uppercase tracking-widest">Tiada Rekod Cloud</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </main>
-
-        <footer class="mt-20 mb-10 text-center text-white/10 text-[10px] uppercase tracking-[1em]">
-            BPK VETERINAR &copy; 2026 | Cloud Engine v3.0.4
-        </footer>
     </div>
 
-    <!-- Audio & Scripts -->
+    <!-- Scripts -->
     <audio id="notifSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -261,6 +259,7 @@
     <script>
         AOS.init();
 
+        // --- FIREBASE CONFIG (GUNA CONFIG ANDA) ---
         const firebaseConfig = {
           apiKey: "AIzaSyBCV-68YWkZkDjIodxWmn6z-d9H7ZS8bDs",
           authDomain: "bpk-cloud-system.firebaseapp.com",
@@ -323,8 +322,8 @@
             if(!date || !tFrom) return Swal.fire('Ralat', 'Tarikh & Masa wajib.', 'error');
 
             const odo = parseFloat(document.getElementById('odoVal').value) || 0;
-            const lastLogWithOdo = tasks.find(t => t.odo > 0);
-            let dist = (odo > 0 && lastLogWithOdo) ? Math.max(0, odo - lastLogWithOdo.odo) : 0;
+            const lastWithOdo = tasks.find(t => t.odo > 0);
+            let dist = (odo > 0 && lastWithOdo) ? Math.max(0, odo - lastWithOdo.odo) : 0;
 
             const newEntry = {
                 id: Date.now(),
@@ -345,7 +344,7 @@
             ['datePicker','timeFrom','timeSemasa','timeTo','fromLoc','sLoc','toLoc','odoVal','taskInput','fuelAmount'].forEach(id => {
                 if(document.getElementById(id)) document.getElementById(id).value = '';
             });
-            Swal.fire({ icon: 'success', title: 'Data Cloud Disimpan', timer: 1000, showConfirmButton: false });
+            Swal.fire({ icon: 'success', title: 'Tersimpan!', timer: 800, showConfirmButton: false });
         }
 
         function renderUI() {
@@ -377,13 +376,14 @@
                     const tr = document.createElement('tr');
                     tr.className = "hover:bg-white/5 border-b border-white/5 transition cursor-pointer";
                     tr.onclick = () => showDetails(t);
+                    
                     tr.innerHTML = `
                         <td class="p-4 font-digital ${isL ? 'text-green-500' : isM ? 'text-red-400' : 'text-white'} text-[10px]">
                             ${t.tFrom} → ${t.tTo}
                         </td>
                         <td class="p-4">
-                            <div class="font-medium text-[12px]">${t.note}</div>
-                            ${isL ? `<div class="text-[9px] text-green-500/60 font-bold uppercase mt-1">📍 ${t.from} > ${t.to} | +${t.distance}KM</div>` : ''}
+                            <div class="font-medium text-[12px]">${t.note.substring(0,60)}...</div>
+                            ${!isM ? `<div class="text-[9px] opacity-60 uppercase font-bold mt-1">📍 ${t.from} > ${t.to} ${isL ? '| +'+t.distance+'KM' : ''}</div>` : ''}
                             ${isM ? `<div class="text-[9px] text-red-400 font-extrabold mt-1 uppercase tracking-tighter">ISI MINYAK: RM ${t.fuelAmount} (${t.fuelType}) | ODO: ${t.odo}</div>` : ''}
                         </td>
                         <td class="p-4 text-right">
@@ -403,11 +403,11 @@
             let html = `
                 <div class="grid grid-cols-2 gap-3 mb-6">
                     <div class="bg-red-500/10 p-4 rounded-2xl border border-red-500/30 text-center">
-                        <p class="text-red-400 text-[9px] font-bold uppercase tracking-widest">RM Minyak</p>
+                        <p class="text-red-400 text-[9px] font-bold uppercase">RM Minyak</p>
                         <p class="text-2xl font-bold">RM ${totalFuel.toFixed(2)}</p>
                     </div>
                     <div class="bg-green-500/10 p-4 rounded-2xl border border-green-500/30 text-center">
-                        <p class="text-green-400 text-[9px] font-bold uppercase tracking-widest">Jarak KM</p>
+                        <p class="text-green-400 text-[9px] font-bold uppercase">Jarak KM</p>
                         <p class="text-2xl font-bold">${totalKM} KM</p>
                     </div>
                 </div>
@@ -423,7 +423,7 @@
                     </div>`;
             });
             html += `</div>`;
-            Swal.fire({ customClass:{popup:'swal-glass'}, title:`Rumusan ${date}`, html });
+            Swal.fire({ customClass:{popup:'swal-glass'}, title:`Penyatuan Data: ${date}`, html });
         }
 
         function showMonthSummary() {
@@ -436,15 +436,15 @@
                 <div class="grid grid-cols-2 gap-3 mb-6">
                     <div class="bg-red-500/10 p-4 rounded-2xl border border-red-500/20 text-center">
                         <p class="text-red-400 text-[9px] font-bold uppercase">Minyak Sebulan</p>
-                        <p class="text-2xl font-bold">RM ${totalRM.toFixed(2)}</p>
+                        <p class="text-xl font-bold text-white">RM ${totalRM.toFixed(2)}</p>
                     </div>
                     <div class="bg-green-500/10 p-4 rounded-2xl border border-green-500/20 text-center">
                         <p class="text-green-400 text-[9px] font-bold uppercase">Jarak Sebulan</p>
-                        <p class="text-2xl font-bold">${totalKM} KM</p>
+                        <p class="text-xl font-bold text-white">${totalKM} KM</p>
                     </div>
                 </div>
                 <div class="text-left space-y-2 max-h-[400px] overflow-y-auto pr-2">
-                    <p class="text-[10px] font-bold text-white/40 uppercase mb-3">Senarai Aktiviti Bulanan:</p>`;
+                    <p class="text-[10px] font-bold text-white/40 uppercase mb-3 tracking-widest">Log Aktiviti Keseluruhan:</p>`;
             
             monthData.forEach(t => {
                 const color = t.type==='log' ? 'text-green-400' : t.type==='minyak' ? 'text-red-400' : 'text-blue-400';
@@ -454,29 +454,29 @@
                             <span>${t.date}</span><span>${t.type}</span>
                         </div>
                         <p class="text-xs text-white/80 mt-1">${t.note}</p>
-                        <div class="flex justify-between text-[9px] opacity-40 mt-1 font-digital">
-                            <span>Mula: ${t.tFrom}</span>
-                            <span>KM: +${t.distance}</span>
-                            ${t.fuelAmount > 0 ? `<span class="text-red-300">RM ${t.fuelAmount}</span>` : ''}
+                        <div class="flex justify-between text-[9px] opacity-50 mt-1 font-digital">
+                            <span>Waktu: ${t.tFrom}</span>
+                            <span>Jarak: +${t.distance} KM</span>
+                            ${t.fuelAmount > 0 ? `<span class="text-red-300">Kos: RM ${t.fuelAmount}</span>` : ''}
                         </div>
                     </div>`;
             });
             html += `</div>`;
-            Swal.fire({ customClass:{popup:'swal-glass'}, title:`Analisis Eksekutif Bulanan`, html });
+            Swal.fire({ customClass:{popup:'swal-glass'}, title:`Analisis Bulanan`, html });
         }
 
         function showDetails(t) {
             Swal.fire({
                 customClass: { popup: 'swal-glass' },
-                title: `<span class="text-blue-400 font-bold uppercase text-sm">Maklumat Rekod</span>`,
+                title: `<span class="text-blue-400 font-bold uppercase text-sm">Butiran Rekod</span>`,
                 html: `
                     <div class="text-left space-y-4 p-2 text-white text-xs">
                         <div class="grid grid-cols-3 gap-2 text-center bg-black/40 p-3 rounded-xl border border-white/5 font-digital text-[9px]">
-                            <div><span class="opacity-30">DARI</span><br>${t.tFrom}</div>
-                            <div><span class="opacity-30">TRANSIT</span><br>${t.tSemasa}</div>
-                            <div><span class="opacity-30">HINGGA</span><br>${t.tTo}</div>
+                            <div><span class="opacity-30 uppercase">Mula</span><br>${t.tFrom}</div>
+                            <div><span class="opacity-30 uppercase">Transit</span><br>${t.tSemasa}</div>
+                            <div><span class="opacity-30 uppercase">Akhir</span><br>${t.tTo}</div>
                         </div>
-                        ${t.type !== 'minyak' ? `<div class="bg-white/5 p-4 rounded-xl border border-white/5"><p class="text-blue-400 font-bold uppercase text-[9px]">📍 Laluan:</p><p class="text-sm font-bold mt-1">${t.from} → ${t.sLoc} → ${t.to}</p></div>` : ''}
+                        ${t.type !== 'minyak' ? `<div class="bg-white/5 p-4 rounded-xl border border-white/5"><p class="text-blue-400 font-bold uppercase text-[9px]">📍 Laluan:</p><p class="text-sm font-bold mt-1 text-white">${t.from} → ${t.sLoc} → ${t.to}</p></div>` : ''}
                         ${t.type !== 'tugas' ? `<div class="bg-green-500/10 p-4 rounded-xl border border-green-500/20 flex justify-between"><div><p class="text-green-400 font-bold uppercase text-[9px]">Odometer</p><p class="text-sm font-digital">${t.odo} KM</p></div><div><p class="text-yellow-500 font-bold uppercase text-[9px]">Beza Jarak</p><p class="text-sm font-digital">+${t.distance} KM</p></div></div>` : ''}
                         ${t.type === 'minyak' ? `<div class="bg-red-500/10 p-4 rounded-xl border border-red-500/20"><p class="text-red-400 font-bold uppercase text-[9px]">Isian Minyak</p><p class="text-sm font-bold">RM ${t.fuelAmount} (${t.fuelType})</p></div>` : ''}
                         <div class="p-4 bg-white/5 rounded-xl italic text-sm leading-relaxed border border-white/10">${t.note}</div>
@@ -492,10 +492,10 @@
 
         setInterval(() => {
             const now = new Date();
-            document.getElementById('realTime').textContent = now.toLocaleTimeString('en-US', {hour12:false});
+            let timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+            document.getElementById('realTime').textContent = timeStr;
             document.getElementById('realDate').textContent = now.toLocaleDateString('ms-MY');
             document.getElementById('realDay').textContent = ["AHAD","ISNIN","SELASA","RABU","KHAMIS","JUMAAT","SABTU"][now.getDay()];
-            document.getElementById('realAMPM').textContent = now.getHours() >= 12 ? 'PM' : 'AM';
         }, 1000);
 
         flatpickr("#datePicker", { dateFormat: "d-m-Y" });
