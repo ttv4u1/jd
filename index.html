@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Pergerakan Korporat | Smart Reminder</title>
+    <title>Dashboard Pergerakan Korporat BPK</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
@@ -14,17 +14,21 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background: radial-gradient(circle at top right, #0f172a, #1e293b, #000);
+            background: radial-gradient(circle at center, #1e293b, #0f172a, #000);
             background-attachment: fixed;
             color: white;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
+        .font-digital { font-family: 'Orbitron', sans-serif; }
+
         .glass {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
         }
 
         .jata-bg {
@@ -32,236 +36,344 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 60%;
-            opacity: 0.03;
+            width: 65%;
+            opacity: 0.05;
             z-index: -1;
             pointer-events: none;
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.1));
         }
 
+        /* Pixar 3D Button Style */
         .btn-3d {
-            background: linear-gradient(145deg, #3b82f6, #2563eb);
-            box-shadow: 0 8px 15px rgba(37, 99, 235, 0.4), inset 0 -4px 0 rgba(0,0,0,0.2);
-            transition: 0.3s;
+            background: linear-gradient(145deg, #0ea5e9, #2563eb);
+            box-shadow: 0 6px 0 #1e40af, 0 12px 24px rgba(0,0,0,0.4);
+            border-radius: 16px;
+            transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .btn-3d:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #1e40af, 0 6px 12px rgba(0,0,0,0.4);
         }
 
-        .btn-3d:active { transform: translateY(2px); box-shadow: none; }
-
-        .notification-active {
-            animation: pulse-red 2s infinite;
+        .glow-text {
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.7);
         }
 
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        .clock-section {
+            border-left: 2px solid rgba(255,255,255,0.05);
+            padding-left: 2rem;
         }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.5); border-radius: 10px; }
     </style>
 </head>
-<body>
+<body class="p-4 md:p-8">
 
-    <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" class="jata-bg">
+    <!-- Watermark Jata Negara -->
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" class="jata-bg" alt="Jata Negara">
 
-    <header class="p-6">
-        <div class="container mx-auto flex flex-wrap justify-between items-center glass p-5" data-aos="fade-down">
-            <div class="flex items-center space-x-4">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" class="h-14">
-                <div class="h-10 w-[1px] bg-white/20"></div>
-                <img src="https://github.com/ttv4u1/KP/raw/main/logo%20DVS%20-%20logo%20Veterinar.png" class="h-14">
-            </div>
+    <!-- NAVIGATION / HEADER BAR -->
+    <header class="container mx-auto mb-10" data-aos="fade-down">
+        <div class="glass rounded-[40px] p-6 flex flex-wrap justify-between items-center gap-8 shadow-2xl">
             
-            <div class="text-center">
-                <h1 class="text-xl font-bold tracking-tighter uppercase">Sistem Notifikasi Pergerakan</h1>
-                <p class="text-xs text-blue-400">Bahagian Penguat Kuasa Veterinar</p>
+            <!-- Logo Group -->
+            <div class="flex items-center space-x-5">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" class="h-12 md:h-16 drop-shadow-2xl" alt="Jata">
+                <img src="https://github.com/ttv4u1/KP/raw/main/logo%20DVS%20-%20logo%20Veterinar.png" class="h-12 md:h-16" alt="Jabatan">
+                <img src="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png" class="h-12 md:h-16 rounded-xl" alt="BPK">
+                <div class="hidden xl:block border-l border-white/10 pl-5">
+                    <p class="text-blue-400 font-bold text-xs uppercase tracking-widest">Sistem Pintar</p>
+                    <p class="text-white text-lg font-extrabold uppercase leading-none">Penguat Kuasa Veterinar</p>
+                </div>
             </div>
 
-            <div class="flex items-center space-x-3">
-                <button onclick="requestPermission()" id="notiBtn" class="bg-red-500 hover:bg-red-600 text-white text-[10px] px-3 py-2 rounded-full font-bold transition-all">
-                    AKTIFKAN NOTIFIKASI 🔔
+            <!-- REAL-TIME CLOCK & DAY (STACKED) -->
+            <div class="clock-section flex items-center gap-6">
+                <div class="flex flex-col items-center md:items-end">
+                    <!-- MASA -->
+                    <div class="flex items-baseline gap-2">
+                        <h1 id="realTime" class="text-4xl md:text-5xl font-digital font-bold glow-text leading-none">00:00:00</h1>
+                        <span id="realAMPM" class="text-xs font-bold bg-blue-600 px-2 py-0.5 rounded shadow-lg">AM</span>
+                    </div>
+                    <!-- HARI (DI BAWAH MASA) -->
+                    <p id="realDay" class="text-blue-400 font-bold text-sm tracking-[0.4em] uppercase mt-1 leading-none">MEMUATKAN...</p>
+                    <!-- TARIKH -->
+                    <p id="realDate" class="text-white/40 text-[10px] font-medium uppercase mt-1 tracking-widest italic">17 APRIL 2024</p>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="flex items-center">
+                <button onclick="requestPermission()" id="notiBtn" class="bg-red-500/10 hover:bg-red-500 border border-red-500/50 text-white text-[10px] px-6 py-3 rounded-2xl font-bold transition-all flex items-center gap-3 shadow-xl">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                    </span>
+                    AKTIFKAN NOTIFIKASI
                 </button>
-                <img src="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png" class="h-12 rounded-lg">
             </div>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-6">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <main class="container mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
-            <!-- Input Card -->
-            <div class="lg:col-span-1 glass p-8" data-aos="zoom-in-right">
-                <h3 class="text-xl font-bold mb-6 flex items-center">
-                    <span class="mr-2">📅</span> Tambah Jadual Baru
-                </h3>
-                
-                <div class="space-y-4">
-                    <input type="text" id="datePicker" class="w-full bg-white/5 border border-white/10 rounded-xl p-4" placeholder="Pilih Tarikh">
-                    <input type="text" id="timePicker" class="w-full bg-white/5 border border-white/10 rounded-xl p-4" placeholder="Pilih Masa">
-                    <textarea id="taskInput" rows="3" class="w-full bg-white/5 border border-white/10 rounded-xl p-4" placeholder="Tujuan / Lokasi Pergerakan"></textarea>
+            <!-- FORM INPUT -->
+            <div class="lg:col-span-4" data-aos="fade-right" data-aos-delay="200">
+                <div class="glass rounded-[35px] p-8 sticky top-8 border-t-4 border-blue-500">
+                    <h3 class="text-2xl font-bold mb-8 flex items-center gap-4">
+                        <span class="p-3 bg-blue-500/20 rounded-2xl text-xl">📝</span> Daftar Jadual
+                    </h3>
                     
-                    <button onclick="saveTask()" class="w-full btn-3d py-4 rounded-xl font-bold text-white uppercase">
-                        Simpan & Set Peringatan
-                    </button>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="text-[10px] font-bold text-blue-400 uppercase tracking-widest ml-1 mb-2 block">Tarikh Pergerakan</label>
+                            <input type="text" id="datePicker" class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-blue-400 uppercase tracking-widest ml-1 mb-2 block">Masa Tugas (12 Jam)</label>
+                            <input type="text" id="timePicker" class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm font-digital">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-blue-400 uppercase tracking-widest ml-1 mb-2 block">Perincian / Lokasi</label>
+                            <textarea id="taskInput" rows="3" class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm" placeholder="Masukkan tugasan korporat..."></textarea>
+                        </div>
+                        <button onclick="saveTask()" class="w-full btn-3d py-5 text-sm font-extrabold uppercase tracking-[0.2em] text-white">
+                            SIMPAN JADUAL 🚀
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Table Card -->
-            <div class="lg:col-span-2 glass overflow-hidden" data-aos="zoom-in-left">
-                <div class="p-6 bg-white/5 border-b border-white/10 flex justify-between items-center">
-                    <h3 class="font-bold uppercase tracking-widest text-blue-400">Senarai Tugas Aktif</h3>
-                    <div id="clock" class="text-lg font-mono text-yellow-400">00:00:00</div>
+            <!-- ACTIVE TASKS TABLE -->
+            <div class="lg:col-span-8" data-aos="fade-left" data-aos-delay="400">
+                <div class="glass rounded-[35px] overflow-hidden shadow-2xl min-h-[500px] flex flex-col">
+                    <div class="p-6 bg-white/5 border-b border-white/10 flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <span class="h-3 w-3 bg-green-500 rounded-full animate-pulse shadow-[0_0_15px_#22c55e]"></span>
+                            <h3 class="font-bold uppercase tracking-[0.2em] text-sm text-blue-300">Tugasan Aktif</h3>
+                        </div>
+                        <span id="activeCount" class="bg-blue-600 px-3 py-1 rounded-full text-xs font-bold">0 Rekod</span>
+                    </div>
+                    
+                    <div class="overflow-x-auto flex-grow">
+                        <table class="w-full text-left">
+                            <thead class="bg-white/5 text-[10px] uppercase text-white/30 tracking-[0.2em]">
+                                <tr>
+                                    <th class="p-6">Tarikh / Hari</th>
+                                    <th class="p-6">Masa</th>
+                                    <th class="p-6">Tugasan</th>
+                                    <th class="p-6">Status</th>
+                                    <th class="p-6"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="activeBody" class="text-sm divide-y divide-white/5">
+                                <!-- JS Injection -->
+                            </tbody>
+                        </table>
+                        <div id="activeEmpty" class="p-20 text-center opacity-20">
+                            <p class="text-6xl mb-4">📂</p>
+                            <p class="text-sm font-medium">Tiada tugasan aktif buat masa ini</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HISTORY SECTION -->
+        <div class="mt-12" data-aos="fade-up">
+            <div class="glass rounded-[35px] overflow-hidden border-t-4 border-gray-600">
+                <div class="p-6 bg-black/40 border-b border-white/5 flex justify-between items-center">
+                    <h3 class="font-bold text-xs uppercase tracking-[0.3em] text-gray-400 flex items-center gap-3">
+                        <span>📜</span> Sejarah Rekod Pergerakan
+                    </h3>
+                    <button onclick="clearHistory()" class="text-[10px] text-red-400 hover:text-red-300 font-bold uppercase underline tracking-widest">Kosongkan History</button>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
-                        <thead class="bg-white/5 text-xs">
+                        <thead class="bg-black/20 text-[10px] uppercase text-white/10 tracking-widest">
                             <tr>
-                                <th class="p-4">Tarikh & Hari</th>
-                                <th class="p-4">Masa</th>
-                                <th class="p-4">Tugas</th>
-                                <th class="p-4">Status</th>
-                                <th class="p-4">Tindakan</th>
+                                <th class="p-5">Tarikh Selesai</th>
+                                <th class="p-5">Masa Asal</th>
+                                <th class="p-5">Keterangan Tugas</th>
+                                <th class="p-5">Status Akhir</th>
                             </tr>
                         </thead>
-                        <tbody id="taskTableBody" class="text-sm">
-                            <!-- Data injected by JS -->
+                        <tbody id="historyBody" class="text-xs divide-y divide-white/5 text-gray-500 italic">
+                            <!-- History Injection -->
                         </tbody>
                     </table>
+                    <div id="historyEmpty" class="p-12 text-center opacity-10">
+                        <p>Tiada arkib sejarah</p>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
+    <footer class="mt-20 mb-10 text-center text-white/10 text-[10px] uppercase tracking-[1em]">
+        Bahagian Penguat Kuasa Veterinar &copy; 2024
+    </footer>
+
+    <!-- Audio & Scripts -->
+    <audio id="notifSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        AOS.init();
+        AOS.init({ duration: 1000, once: true });
 
-        // Setup Pickers
+        // REAL-TIME CLOCK ENGINE
+        function updateClock() {
+            const now = new Date();
+            const days = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
+            const months = ["JAN", "FEB", "MAC", "APR", "MEI", "JUN", "JUL", "OGOS", "SEP", "OKT", "NOV", "DIS"];
+
+            let h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+            let ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12 || 12;
+            m = m < 10 ? '0'+m : m;
+            s = s < 10 ? '0'+s : s;
+
+            // Update UI
+            document.getElementById('realTime').textContent = `${h}:${m}:${s}`;
+            document.getElementById('realDay').textContent = days[now.getDay()];
+            document.getElementById('realDate').textContent = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+            document.getElementById('realAMPM').textContent = ampm;
+
+            // Logic trigger
+            const currentFormattedDate = `${now.getDate().toString().padStart(2, '0')}-${(now.getMonth()+1).toString().padStart(2, '0')}-${now.getFullYear()}`;
+            const currentFormattedTime = `${h}:${m} ${ampm}`;
+            
+            checkReminders(currentFormattedDate, currentFormattedTime);
+        }
+        setInterval(updateClock, 1000);
+
+        // DATA STORAGE
+        let tasks = JSON.parse(localStorage.getItem('bpk_tasks_v2')) || [];
+        let history = JSON.parse(localStorage.getItem('bpk_history_v2')) || [];
+
+        // PICKERS
         flatpickr("#datePicker", { dateFormat: "d-m-Y", minDate: "today" });
         flatpickr("#timePicker", { enableTime: true, noCalendar: true, dateFormat: "h:i K" });
-
-        // Clock Function
-        setInterval(() => {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', { hour12: true });
-            checkReminders(now);
-        }, 1000);
-
-        // Request Permission
-        function requestPermission() {
-            Notification.requestPermission().then(permission => {
-                if (permission === "granted") {
-                    document.getElementById('notiBtn').innerText = "NOTIFIKASI AKTIF ✅";
-                    document.getElementById('notiBtn').className = "bg-green-600 text-white text-[10px] px-3 py-2 rounded-full font-bold transition-all";
-                }
-            });
-        }
-
-        // Local Storage Logic
-        let tasks = JSON.parse(localStorage.getItem('corpTasks')) || [];
 
         function saveTask() {
             const date = document.getElementById('datePicker').value;
             const time = document.getElementById('timePicker').value;
-            const task = document.getElementById('taskInput').value;
+            const text = document.getElementById('taskInput').value;
 
-            if (!date || !time || !task) {
-                Swal.fire('Ralat', 'Sila isi semua maklumat', 'error');
-                return;
-            }
+            if(!date || !time || !text) return Swal.fire('Ralat', 'Sila isi maklumat tugasan!', 'error');
 
-            const newTask = {
-                id: Date.now(),
-                date,
-                time,
-                task,
-                notified: false
-            };
-
-            tasks.push(newTask);
-            localStorage.setItem('corpTasks', JSON.stringify(tasks));
-            renderTasks();
-            
-            Swal.fire({
-                icon: 'success',
-                title: 'Disimpan!',
-                text: 'Notifikasi akan keluar pada masa ditetapkan.',
-                background: '#1e293b',
-                color: '#fff'
-            });
+            tasks.push({ id: Date.now(), date, time, text, notified: false });
+            saveAndRender();
+            document.getElementById('taskInput').value = '';
+            Swal.fire({ icon: 'success', title: 'Berjaya Disimpan', background: '#0f172a', color: '#fff', timer: 1500 });
         }
 
-        function renderTasks() {
-            const body = document.getElementById('taskTableBody');
-            body.innerHTML = '';
-            
-            tasks.forEach(t => {
-                const row = document.createElement('tr');
-                row.className = "border-b border-white/5 hover:bg-white/5 transition";
-                row.innerHTML = `
-                    <td class="p-4 font-bold text-blue-300">${t.date}</td>
-                    <td class="p-4"><span class="bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded text-xs font-bold">${t.time}</span></td>
-                    <td class="p-4 text-white/70">${t.task}</td>
-                    <td class="p-4">
-                        <span class="${t.notified ? 'text-green-400' : 'text-gray-400 animate-pulse'}">
-                            ${t.notified ? '✅ Selesai' : '⏳ Menunggu'}
-                        </span>
-                    </td>
-                    <td class="p-4">
-                        <button onclick="deleteTask(${t.id})" class="text-red-400 hover:text-red-200">Hapus</button>
-                    </td>
-                `;
-                body.appendChild(row);
-            });
-        }
+        function checkReminders(d, t) {
+            tasks.forEach((task, index) => {
+                if(task.date === d && task.time === t && !task.notified) {
+                    task.notified = true;
+                    
+                    // Sound & Visual Notification
+                    document.getElementById('notifSound').play();
+                    if(Notification.permission === "granted") {
+                        new Notification("MASA TUGASAN!", { body: task.text, icon: "https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png" });
+                    }
+                    Swal.fire({ title: 'MASA TIBA!', text: task.text, icon: 'warning', background: '#0f172a', color: '#fff' });
 
-        function deleteTask(id) {
-            tasks = tasks.filter(t => t.id !== id);
-            localStorage.setItem('corpTasks', JSON.stringify(tasks));
-            renderTasks();
-        }
-
-        // REMINDER ENGINE
-        function checkReminders(now) {
-            const currentTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-            const currentDate = now.toLocaleDateString('en-GB').replace(/\//g, '-'); // Format DD-MM-YYYY
-
-            tasks.forEach(t => {
-                // Bandingkan tarikh dan masa (tanpa saat)
-                if (t.date === currentDate && t.time === currentTime && !t.notified) {
-                    triggerNotification(t);
-                    t.notified = true;
-                    localStorage.setItem('corpTasks', JSON.stringify(tasks));
-                    renderTasks();
+                    // Auto-archive logic
+                    history.unshift({...task, finishedAt: new Date().toLocaleString()});
+                    tasks.splice(index, 1);
+                    saveAndRender();
                 }
             });
         }
 
-        function triggerNotification(task) {
-            // Browser notification
-            if (Notification.permission === "granted") {
-                new Notification("PERINGATAN TUGAS!", {
-                    body: `Masa: ${task.time}\nTugas: ${task.task}`,
-                    icon: "https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg"
-                });
-            }
-
-            // In-app alert
-            Swal.fire({
-                title: 'WAKTU TUGASAN!',
-                text: task.task,
-                icon: 'warning',
-                confirmButtonText: 'Faham',
-                backdrop: `rgba(255,191,0,0.4)`
-            });
-            
-            // Sound effect
-            const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-            audio.play();
+        function saveAndRender() {
+            localStorage.setItem('bpk_tasks_v2', JSON.stringify(tasks));
+            localStorage.setItem('bpk_history_v2', JSON.stringify(history));
+            renderActive();
+            renderHistory();
         }
 
-        // Load on start
-        renderTasks();
+        function renderActive() {
+            const body = document.getElementById('activeBody');
+            const empty = document.getElementById('activeEmpty');
+            document.getElementById('activeCount').innerText = tasks.length + " Rekod";
+            body.innerHTML = '';
+            
+            if(tasks.length === 0) empty.style.display = 'block';
+            else empty.style.display = 'none';
+
+            tasks.forEach(t => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-white/5 transition group";
+                tr.innerHTML = `
+                    <td class="p-6 font-bold text-blue-300">${t.date}</td>
+                    <td class="p-6"><span class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-xl font-digital text-xs">${t.time}</span></td>
+                    <td class="p-6 text-white/70">${t.text}</td>
+                    <td class="p-6"><span class="text-[10px] font-bold text-yellow-500 animate-pulse tracking-widest uppercase">● Menunggu</span></td>
+                    <td class="p-6 text-right">
+                        <button onclick="deleteActive(${t.id})" class="text-red-400 opacity-0 group-hover:opacity-100 transition font-bold text-[10px]">PADAM</button>
+                    </td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        function renderHistory() {
+            const body = document.getElementById('historyBody');
+            const empty = document.getElementById('historyEmpty');
+            body.innerHTML = '';
+            
+            if(history.length === 0) empty.style.display = 'block';
+            else empty.style.display = 'none';
+
+            history.forEach(h => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-5">${h.date}</td>
+                    <td class="p-5">${h.time}</td>
+                    <td class="p-5">${h.text}</td>
+                    <td class="p-5 text-green-500/40 font-bold uppercase tracking-widest text-[9px]">Selesai ✅</td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        function deleteActive(id) {
+            tasks = tasks.filter(x => x.id !== id);
+            saveAndRender();
+        }
+
+        function clearHistory() {
+            Swal.fire({
+                title: 'Kosongkan Sejarah?',
+                text: "Data sejarah akan dipadam secara kekal.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                background: '#0f172a', color: '#fff'
+            }).then((res) => { if(res.isConfirmed) { history = []; saveAndRender(); } });
+        }
+
+        function requestPermission() {
+            Notification.requestPermission().then(p => {
+                if(p === 'granted') {
+                    document.getElementById('notiBtn').className = "bg-green-500/20 text-green-500 border border-green-500/50 text-[10px] px-6 py-3 rounded-2xl font-bold shadow-green-500/20 shadow-lg";
+                    document.getElementById('notiBtn').innerHTML = "NOTIFIKASI AKTIF ✅";
+                }
+            });
+        }
+
+        // Init
+        saveAndRender();
+        updateClock();
     </script>
 </body>
 </html>
