@@ -3,15 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Log BPK | v1.2.1</title>
+    <title>Sistem Log BPK | v1.3.0</title>
     
     <link rel="icon" type="image/png" href="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png">
 
+    <!-- Frameworks -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+
+    <!-- Export Libraries -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
 
     <style>
         :root {
@@ -44,6 +49,18 @@
         }
         .btn-3d:active { transform: translateY(2px); box-shadow: 0 1px 0 #1e40af; }
 
+        .btn-export {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.3s;
+        }
+
         .jata-bg {
             position: fixed;
             top: 50%; left: 50%;
@@ -64,7 +81,6 @@
             font-size: 0.8rem;
             width: 100%;
         }
-        .input-field:focus { border-color: var(--accent); }
 
         .ver-tag {
             font-size: 8px;
@@ -95,10 +111,10 @@
                 </div>
                 <div class="h-8 w-[1px] bg-white/10 hidden md:block"></div>
                 <div class="flex flex-col">
-                    <h1 class="text-white text-xs md:text-sm lg:text-base font-extrabold uppercase leading-none">
-                        BPK VETERINAR <span class="ver-tag align-middle ml-1">v1.2.1</span>
+                    <h1 class="text-white text-xs md:text-sm lg:text-base font-extrabold uppercase leading-none tracking-tight">
+                        BPK VETERINAR <span class="ver-tag align-middle ml-1">v1.3.0</span>
                     </h1>
-                    <p class="text-[8px] md:text-[9px] text-blue-400 font-bold uppercase mt-1 tracking-widest">Dashboard Dual-Waktu</p>
+                    <p class="text-[8px] md:text-[9px] text-blue-400 font-bold uppercase mt-1 tracking-widest leading-none">Management & Export Hub</p>
                 </div>
             </div>
 
@@ -140,46 +156,64 @@
                     
                     <div class="space-y-4">
                         <div>
-                            <label class="text-[9px] font-bold text-white/40 uppercase">Tarikh</label>
+                            <label class="text-[9px] font-bold text-white/40 uppercase tracking-wider mb-1 block">Tarikh</label>
                             <input type="text" id="datePicker" class="input-field">
                         </div>
 
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="text-[9px] font-bold text-white/40 uppercase">Dari (Mula)</label>
+                                <label class="text-[9px] font-bold text-white/40 uppercase tracking-wider mb-1 block">Dari (Mula)</label>
                                 <input type="text" id="timeFrom" class="input-field font-digital">
                             </div>
                             <div>
-                                <label class="text-[9px] font-bold text-white/40 uppercase">Hingga (Tamat)</label>
+                                <label class="text-[9px] font-bold text-white/40 uppercase tracking-wider mb-1 block">Hingga (Tamat)</label>
                                 <input type="text" id="timeTo" class="input-field font-digital">
                             </div>
                         </div>
 
-                        <!-- MOVEMENT FIELDS (LOG ONLY) -->
                         <div id="movementFields" class="hidden animate-fade-in space-y-4">
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label class="text-[9px] font-bold text-white/40 uppercase">Lokasi Mula</label>
+                                    <label class="text-[9px] font-bold text-white/40 uppercase tracking-wider mb-1 block">Lokasi Mula</label>
                                     <input type="text" id="fromLoc" class="input-field" placeholder="Mula">
                                 </div>
                                 <div>
-                                    <label class="text-[9px] font-bold text-white/40 uppercase">Destinasi</label>
+                                    <label class="text-[9px] font-bold text-white/40 uppercase tracking-wider mb-1 block">Destinasi</label>
                                     <input type="text" id="toLoc" class="input-field" placeholder="Destinasi">
                                 </div>
                             </div>
                             <div>
-                                <label class="text-[9px] font-bold text-white/40 uppercase">Odometer Kereta (KM)</label>
+                                <label class="text-[9px] font-bold text-white/40 uppercase tracking-wider mb-1 block">Odometer Kereta (KM)</label>
                                 <input type="number" id="odoVal" class="input-field" placeholder="Bacaan Odometer">
                             </div>
                         </div>
 
                         <div>
-                            <label id="labelTugas" class="text-[9px] font-bold text-white/40 uppercase tracking-widest">Butiran Tugasan</label>
-                            <textarea id="taskInput" rows="2" class="input-field" placeholder="Sila masukkan maklumat..."></textarea>
+                            <label id="labelTugas" class="text-[9px] font-bold text-white/40 uppercase tracking-wider mb-1 block">Butiran Tugasan</label>
+                            <textarea id="taskInput" rows="2" class="input-field" placeholder="Masukkan maklumat..."></textarea>
                         </div>
 
                         <button onclick="saveEntry()" class="w-full btn-3d py-4 text-xs font-extrabold uppercase tracking-widest text-white mt-2">
                             Simpan Rekod 💾
+                        </button>
+                    </div>
+                </div>
+
+                <!-- DOWNLOAD HUB (NEW) -->
+                <div class="glass p-5 mt-6 border-l-4 border-yellow-500 shadow-xl" data-aos="zoom-in">
+                    <h3 class="text-[10px] font-extrabold text-yellow-500 uppercase tracking-widest mb-4">Export Log Hub</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="exportWord()" class="btn-export bg-blue-600/20 text-blue-400 border border-blue-500/30 hover:bg-blue-600 hover:text-white">
+                            📄 Word
+                        </button>
+                        <button onclick="exportExcel()" class="btn-export bg-green-600/20 text-green-400 border border-green-500/30 hover:bg-green-600 hover:text-white">
+                            📊 Excel
+                        </button>
+                        <button onclick="exportPPT()" class="btn-export bg-red-600/20 text-red-400 border border-red-500/30 hover:bg-red-600 hover:text-white">
+                            🎬 PPT
+                        </button>
+                        <button onclick="exportCSV()" class="btn-export bg-purple-600/20 text-purple-400 border border-purple-500/30 hover:bg-purple-600 hover:text-white">
+                            🗄️ Access
                         </button>
                     </div>
                 </div>
@@ -191,8 +225,8 @@
                     <div class="p-4 bg-white/5 border-b border-white/5 flex flex-wrap justify-between items-center gap-2">
                         <h3 class="font-bold uppercase tracking-widest text-[9px] text-blue-300">Log Aktif Semasa</h3>
                         <div class="flex gap-4 text-[9px] font-bold">
-                            <span class="text-white">● TUGAS</span>
-                            <span class="text-green-400 font-digital">● PERGERAKAN</span>
+                            <span class="text-white">● JADUAL TUGAS</span>
+                            <span class="text-green-400 font-digital">● LOG PERGERAKAN</span>
                         </div>
                     </div>
                     
@@ -200,9 +234,9 @@
                         <table class="w-full text-left text-xs">
                             <thead class="bg-black/20 text-[9px] uppercase text-white/30 tracking-widest">
                                 <tr>
-                                    <th class="p-4">Tarikh / Hari</th>
-                                    <th class="p-4">Tempoh Waktu (Dari - Hingga)</th>
-                                    <th class="p-4">Maklumat / Butiran</th>
+                                    <th class="p-4">Tarikh & Hari</th>
+                                    <th class="p-4">Waktu (Dari - Hingga)</th>
+                                    <th class="p-4">Butiran Catatan</th>
                                     <th class="p-4">Laluan / Odo</th>
                                     <th class="p-4"></th>
                                 </tr>
@@ -224,18 +258,18 @@
         <div class="mt-8" data-aos="fade-up">
             <div class="glass overflow-hidden border-t border-white/10 bg-black/30">
                 <div class="p-4 flex justify-between items-center bg-black/20">
-                    <h3 class="font-bold text-[9px] uppercase tracking-[0.3em] text-white/20 italic">📜 Sejarah Rekod Pergerakan & Tugas</h3>
-                    <button onclick="clearHistory()" class="text-[8px] text-red-500/50 hover:text-red-500 font-bold uppercase underline">Kosongkan Arkib</button>
+                    <h3 class="font-bold text-[9px] uppercase tracking-[0.3em] text-white/20 italic">📜 Arkib Sejarah Log</h3>
+                    <button onclick="clearHistory()" class="text-[8px] text-red-500/50 hover:text-red-500 font-bold uppercase underline">Padam Sejarah</button>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-[11px]">
                         <thead class="bg-black/40 text-[8px] uppercase text-white/10 tracking-widest border-b border-white/5">
                             <tr>
                                 <th class="p-4">Tarikh</th>
-                                <th class="p-4">Masa (Dari - Hingga)</th>
+                                <th class="p-4">Waktu</th>
                                 <th class="p-4">Kategori</th>
-                                <th class="p-4">Maklumat Ringkas</th>
-                                <th class="p-4">Tindakan</th>
+                                <th class="p-4">Maklumat</th>
+                                <th class="p-4">Status</th>
                             </tr>
                         </thead>
                         <tbody id="historyBody" class="divide-y divide-white/5 text-white/10">
@@ -249,7 +283,7 @@
 
     <footer class="mt-12 mb-6 flex flex-col items-center gap-2">
         <p class="text-white/10 text-[8px] uppercase tracking-[0.8em]">Bahagian Penguat Kuasa Veterinar</p>
-        <span class="text-[7px] text-white/5 font-mono">v1.2.1 Stable-Build | April 2026</span>
+        <span class="text-[7px] text-white/5 font-mono">Build v1.3.0 Stable | Office Export Integrated</span>
     </footer>
 
     <audio id="notifSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
@@ -263,8 +297,8 @@
         const monthsMs = ["JAN", "FEB", "MAC", "APR", "MEI", "JUN", "JUL", "OGOS", "SEP", "OKT", "NOV", "DIS"];
 
         let currentType = 'tugas';
-        let tasks = JSON.parse(localStorage.getItem('bpk_v121_active')) || [];
-        let history = JSON.parse(localStorage.getItem('bpk_v121_history')) || [];
+        let tasks = JSON.parse(localStorage.getItem('bpk_v130_active')) || [];
+        let history = JSON.parse(localStorage.getItem('bpk_v130_history')) || [];
 
         function setType(type) {
             currentType = type;
@@ -314,16 +348,21 @@
             tasks.push({ 
                 id: Date.now(), 
                 type: currentType, 
-                date, day: dayName, 
-                tFrom, tTo, 
-                from, to, odo, note, 
+                date: date || 'N/A', 
+                day: dayName, 
+                tFrom: tFrom || 'N/A', 
+                tTo: tTo || 'N/A', 
+                from: from || '-', 
+                to: to || '-', 
+                odo: odo || '-', 
+                note: note || '-', 
                 notified: false 
             });
 
-            localStorage.setItem('bpk_v121_active', JSON.stringify(tasks));
+            localStorage.setItem('bpk_v130_active', JSON.stringify(tasks));
             renderActive();
             ['datePicker','timeFrom','timeTo','fromLoc','toLoc','odoVal','taskInput'].forEach(id => document.getElementById(id).value = '');
-            Swal.fire({ icon: 'success', title: 'Berjaya!', text: 'Rekod telah disimpan.', background: '#0f172a', color: '#fff', timer: 1000, showConfirmButton: false });
+            Swal.fire({ icon: 'success', title: 'Tersimpan', background: '#0f172a', color: '#fff', timer: 1000, showConfirmButton: false });
         }
 
         function renderActive() {
@@ -339,19 +378,19 @@
                 tr.className = `border-b border-white/5 transition hover:bg-white/5 ${isLog ? 'text-green-400' : 'text-white'}`;
                 tr.innerHTML = `
                     <td class="p-4">
-                        <div class="font-bold">${t.date || '-'}</div>
-                        <div class="text-[8px] uppercase opacity-50 font-bold tracking-widest">${t.day}</div>
+                        <div class="font-bold">${t.date}</div>
+                        <div class="text-[8px] uppercase opacity-50 font-bold">${t.day}</div>
                     </td>
                     <td class="p-4 font-digital">
-                        <span class="text-[9px] opacity-40">DARI</span> ${t.tFrom || '--:--'} <br>
-                        <span class="text-[9px] opacity-40">HINGGA</span> ${t.tTo || '--:--'}
+                        <span class="text-[9px] opacity-30">DARI</span> ${t.tFrom} <br>
+                        <span class="text-[9px] opacity-30">HINGGA</span> ${t.tTo}
                     </td>
                     <td class="p-4">
                         <div class="text-[9px] font-bold opacity-30 uppercase mb-1">${t.type}</div>
-                        <div class="font-medium max-w-[200px] break-words">${t.note || '-'}</div>
+                        <div class="font-medium max-w-[200px] break-words">${t.note}</div>
                     </td>
                     <td class="p-4">
-                        ${isLog ? `<div class="font-bold">${t.from || '?'} → ${t.to || '?'}</div><div class="text-[9px] opacity-60">ODO: ${t.odo || '-'} KM</div>` : '<span class="opacity-20">-</span>'}
+                        ${isLog ? `<div class="font-bold">${t.from} → ${t.to}</div><div class="text-[9px] opacity-60">ODO: ${t.odo} KM</div>` : '<span class="opacity-20">-</span>'}
                     </td>
                     <td class="p-4 text-right">
                         <button onclick="deleteEntry(${t.id})" class="text-red-500 opacity-30 hover:opacity-100 text-[8px] font-bold uppercase tracking-tighter">Hapus</button>
@@ -361,6 +400,67 @@
             });
         }
 
+        // ================= EXPORT LOGIC =================
+
+        function exportExcel() {
+            if(tasks.length === 0) return Swal.fire('Tiada Data', 'Log Aktif kosong.', 'warning');
+            const worksheet = XLSX.utils.json_to_sheet(tasks);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Log Aktif");
+            XLSX.writeFile(workbook, `Log_BPK_${new Date().getTime()}.xlsx`);
+        }
+
+        function exportWord() {
+            if(tasks.length === 0) return Swal.fire('Tiada Data', 'Log Aktif kosong.', 'warning');
+            let content = `<html><head><meta charset='utf-8'></head><body><h1 style='text-align:center;'>LAPORAN LOG BPK VETERINAR</h1><table border='1' style='width:100%; border-collapse:collapse;'><tr><th>Tarikh</th><th>Masa</th><th>Kategori</th><th>Catatan</th><th>Laluan</th><th>Odo</th></tr>`;
+            
+            tasks.forEach(t => {
+                content += `<tr><td>${t.date} (${t.day})</td><td>${t.tFrom}-${t.tTo}</td><td>${t.type}</td><td>${t.note}</td><td>${t.from} -> ${t.to}</td><td>${t.odo}</td></tr>`;
+            });
+            content += "</table></body></html>";
+            
+            const blob = new Blob(['\ufeff', content], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `Laporan_BPK_${new Date().getTime()}.doc`;
+            link.click();
+        }
+
+        function exportPPT() {
+            if(tasks.length === 0) return Swal.fire('Tiada Data', 'Log Aktif kosong.', 'warning');
+            let pptx = new PptxGenJS();
+            
+            tasks.forEach((t, i) => {
+                let slide = pptx.addSlide();
+                slide.addText(`LOG BPK: ENTRI #${i+1}`, { x:0.5, y:0.5, fontSize:24, color:'363636', bold:true });
+                slide.addText(`Tarikh: ${t.date} (${t.day})`, { x:0.5, y:1.2, fontSize:14 });
+                slide.addText(`Masa: ${t.tFrom} - ${t.tTo}`, { x:0.5, y:1.5, fontSize:14 });
+                slide.addText(`Kategori: ${t.type.toUpperCase()}`, { x:0.5, y:1.8, fontSize:14, color:'0072ff' });
+                slide.addText(`Catatan:\n${t.note}`, { x:0.5, y:2.5, fontSize:18, color:'444444' });
+                if(t.type === 'log') {
+                    slide.addText(`Pergerakan: ${t.from} ke ${t.to}`, { x:0.5, y:4.0, fontSize:16, bold:true });
+                    slide.addText(`Odometer: ${t.odo} KM`, { x:0.5, y:4.4, fontSize:16 });
+                }
+            });
+            pptx.writeFile({ fileName: `Pembentangan_Log_BPK_${new Date().getTime()}.pptx` });
+        }
+
+        function exportCSV() {
+            if(tasks.length === 0) return Swal.fire('Tiada Data', 'Log Aktif kosong.', 'warning');
+            const headers = "Tarikh,Hari,Masa_Dari,Masa_Hingga,Kategori,Note,Dari,Ke,Odo\n";
+            const rows = tasks.map(t => `${t.date},${t.day},${t.tFrom},${t.tTo},${t.type},"${t.note}",${t.from},${t.to},${t.odo}`).join("\n");
+            
+            const blob = new Blob([headers + rows], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `BPK_Database_Access_${new Date().getTime()}.csv`;
+            link.click();
+        }
+
+        // ================= REMINDER & UTILS =================
+
         function checkReminders(d, t) {
             tasks.forEach((task, index) => {
                 if(task.date === d && task.tFrom === t && !task.notified) {
@@ -368,11 +468,11 @@
                     document.getElementById('notifSound').play();
                     history.unshift({...task});
                     tasks.splice(index, 1);
-                    localStorage.setItem('bpk_v121_active', JSON.stringify(tasks));
-                    localStorage.setItem('bpk_v121_history', JSON.stringify(history));
+                    localStorage.setItem('bpk_v130_active', JSON.stringify(tasks));
+                    localStorage.setItem('bpk_v130_history', JSON.stringify(history));
                     renderActive();
                     renderHistory();
-                    Swal.fire({ title: 'MASA TIBA!', text: `${task.note} (${task.tFrom})`, icon: 'info', background: '#0f172a', color: '#fff' });
+                    Swal.fire({ title: 'MASA TIBA!', text: task.note, icon: 'info', background: '#0f172a', color: '#fff' });
                 }
             });
         }
@@ -387,15 +487,15 @@
                     <td class="p-4">${h.date}</td>
                     <td class="p-4 font-digital text-[10px]">${h.tFrom} - ${h.tTo}</td>
                     <td class="p-4 text-[9px] uppercase">${h.type}</td>
-                    <td class="p-4"><b>${h.from ? h.from+' → '+h.to : h.note}</b></td>
-                    <td class="p-4 text-green-500 text-[8px] font-bold uppercase">Rekod Log</td>
+                    <td class="p-4"><b>${h.from !== '-' ? h.from+' → '+h.to : h.note}</b></td>
+                    <td class="p-4 text-green-500 text-[8px] font-bold uppercase tracking-widest">Logged</td>
                 `;
                 body.appendChild(tr);
             });
         }
 
-        function deleteEntry(id) { tasks = tasks.filter(x => x.id !== id); localStorage.setItem('bpk_v121_active', JSON.stringify(tasks)); renderActive(); }
-        function clearHistory() { history = []; localStorage.setItem('bpk_v121_history', JSON.stringify(history)); renderHistory(); }
+        function deleteEntry(id) { tasks = tasks.filter(x => x.id !== id); localStorage.setItem('bpk_v130_active', JSON.stringify(tasks)); renderActive(); }
+        function clearHistory() { history = []; localStorage.setItem('bpk_v130_history', JSON.stringify(history)); renderHistory(); }
         function requestPermission() { Notification.requestPermission(); }
 
         renderActive();
