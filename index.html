@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Log BPK | v1.2.0</title>
+    <title>Sistem Log BPK | v1.2.1</title>
     
     <link rel="icon" type="image/png" href="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png">
 
@@ -58,10 +58,10 @@
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            padding: 10px;
+            padding: 8px 10px;
             color: white;
             outline: none;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             width: 100%;
         }
         .input-field:focus { border-color: var(--accent); }
@@ -83,7 +83,7 @@
 
     <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" class="jata-bg">
 
-    <!-- HEADER (LINEAR v1.1.1) -->
+    <!-- HEADER -->
     <header class="container mx-auto mb-6" data-aos="fade-down">
         <div class="glass p-3 md:p-4 flex flex-wrap justify-between items-center gap-4 shadow-2xl border-b border-white/10">
             
@@ -96,9 +96,9 @@
                 <div class="h-8 w-[1px] bg-white/10 hidden md:block"></div>
                 <div class="flex flex-col">
                     <h1 class="text-white text-xs md:text-sm lg:text-base font-extrabold uppercase leading-none">
-                        BPK VETERINAR <span class="ver-tag align-middle ml-1">v1.2.0</span>
+                        BPK VETERINAR <span class="ver-tag align-middle ml-1">v1.2.1</span>
                     </h1>
-                    <p class="text-[8px] md:text-[9px] text-blue-400 font-bold uppercase mt-1">Sistem Log Dual-Mod</p>
+                    <p class="text-[8px] md:text-[9px] text-blue-400 font-bold uppercase mt-1 tracking-widest">Dashboard Dual-Waktu</p>
                 </div>
             </div>
 
@@ -116,8 +116,8 @@
                 </div>
             </div>
 
-            <button onclick="requestPermission()" id="notiBtn" class="bg-red-500/10 border border-red-500/30 text-white text-[9px] px-4 py-2 rounded-full font-bold transition-all flex items-center gap-2">
-                REMINDER 🔔
+            <button onclick="requestPermission()" id="notiBtn" class="bg-red-500/10 border border-red-500/30 text-white text-[9px] px-4 py-2 rounded-full font-bold transition-all flex items-center gap-2 uppercase">
+                Reminder 🔔
             </button>
         </div>
     </header>
@@ -132,7 +132,6 @@
                         <h3 class="text-xs font-bold text-blue-400 uppercase tracking-widest flex items-center gap-2">
                             <span>📝</span> Daftar Rekod
                         </h3>
-                        <!-- TYPE SELECTOR -->
                         <div class="flex bg-black/40 p-1 rounded-lg border border-white/5">
                             <button onclick="setType('tugas')" id="btnTugas" class="flex-1 py-1.5 text-[10px] font-bold rounded-md transition-all bg-blue-600 text-white">JADUAL TUGAS</button>
                             <button onclick="setType('log')" id="btnLog" class="flex-1 py-1.5 text-[10px] font-bold rounded-md transition-all text-white/40">LOG PERGERAKAN</button>
@@ -140,14 +139,19 @@
                     </div>
                     
                     <div class="space-y-4">
+                        <div>
+                            <label class="text-[9px] font-bold text-white/40 uppercase">Tarikh</label>
+                            <input type="text" id="datePicker" class="input-field">
+                        </div>
+
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="text-[9px] font-bold text-white/40 uppercase">Tarikh</label>
-                                <input type="text" id="datePicker" class="input-field">
+                                <label class="text-[9px] font-bold text-white/40 uppercase">Dari (Mula)</label>
+                                <input type="text" id="timeFrom" class="input-field font-digital">
                             </div>
                             <div>
-                                <label class="text-[9px] font-bold text-white/40 uppercase">Masa</label>
-                                <input type="text" id="timePicker" class="input-field font-digital">
+                                <label class="text-[9px] font-bold text-white/40 uppercase">Hingga (Tamat)</label>
+                                <input type="text" id="timeTo" class="input-field font-digital">
                             </div>
                         </div>
 
@@ -155,27 +159,27 @@
                         <div id="movementFields" class="hidden animate-fade-in space-y-4">
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label class="text-[9px] font-bold text-white/40 uppercase">Dari</label>
+                                    <label class="text-[9px] font-bold text-white/40 uppercase">Lokasi Mula</label>
                                     <input type="text" id="fromLoc" class="input-field" placeholder="Mula">
                                 </div>
                                 <div>
-                                    <label class="text-[9px] font-bold text-white/40 uppercase">Ke</label>
+                                    <label class="text-[9px] font-bold text-white/40 uppercase">Destinasi</label>
                                     <input type="text" id="toLoc" class="input-field" placeholder="Destinasi">
                                 </div>
                             </div>
                             <div>
-                                <label class="text-[9px] font-bold text-white/40 uppercase">Odometer (KM)</label>
-                                <input type="number" id="odoVal" class="input-field" placeholder="Bacaan KM">
+                                <label class="text-[9px] font-bold text-white/40 uppercase">Odometer Kereta (KM)</label>
+                                <input type="number" id="odoVal" class="input-field" placeholder="Bacaan Odometer">
                             </div>
                         </div>
 
                         <div>
-                            <label id="labelTugas" class="text-[9px] font-bold text-white/40 uppercase">Butiran Tugasan</label>
-                            <textarea id="taskInput" rows="2" class="input-field" placeholder="Masukkan maklumat..."></textarea>
+                            <label id="labelTugas" class="text-[9px] font-bold text-white/40 uppercase tracking-widest">Butiran Tugasan</label>
+                            <textarea id="taskInput" rows="2" class="input-field" placeholder="Sila masukkan maklumat..."></textarea>
                         </div>
 
                         <button onclick="saveEntry()" class="w-full btn-3d py-4 text-xs font-extrabold uppercase tracking-widest text-white mt-2">
-                            SIMPAN REKOD 💾
+                            Simpan Rekod 💾
                         </button>
                     </div>
                 </div>
@@ -183,12 +187,12 @@
 
             <!-- LOG AKTIF -->
             <div class="lg:col-span-8" data-aos="fade-left">
-                <div class="glass overflow-hidden shadow-2xl flex flex-col h-full min-h-[450px]">
-                    <div class="p-4 bg-white/5 border-b border-white/5 flex justify-between items-center">
+                <div class="glass overflow-hidden shadow-2xl flex flex-col h-full min-h-[500px]">
+                    <div class="p-4 bg-white/5 border-b border-white/5 flex flex-wrap justify-between items-center gap-2">
                         <h3 class="font-bold uppercase tracking-widest text-[9px] text-blue-300">Log Aktif Semasa</h3>
                         <div class="flex gap-4 text-[9px] font-bold">
-                            <span class="text-white">● JADUAL TUGAS</span>
-                            <span class="text-green-400">● PERGERAKAN</span>
+                            <span class="text-white">● TUGAS</span>
+                            <span class="text-green-400 font-digital">● PERGERAKAN</span>
                         </div>
                     </div>
                     
@@ -197,8 +201,8 @@
                             <thead class="bg-black/20 text-[9px] uppercase text-white/30 tracking-widest">
                                 <tr>
                                     <th class="p-4">Tarikh / Hari</th>
-                                    <th class="p-4">Waktu</th>
-                                    <th class="p-4">Kategori / Butiran</th>
+                                    <th class="p-4">Tempoh Waktu (Dari - Hingga)</th>
+                                    <th class="p-4">Maklumat / Butiran</th>
                                     <th class="p-4">Laluan / Odo</th>
                                     <th class="p-4"></th>
                                 </tr>
@@ -208,7 +212,7 @@
                             </tbody>
                         </table>
                         <div id="activeEmpty" class="p-20 text-center opacity-20">
-                            <p class="text-4xl mb-2">📁</p>
+                            <p class="text-4xl mb-2">📂</p>
                             <p class="text-[9px] font-bold uppercase tracking-widest">Tiada Log Aktif</p>
                         </div>
                     </div>
@@ -220,18 +224,18 @@
         <div class="mt-8" data-aos="fade-up">
             <div class="glass overflow-hidden border-t border-white/10 bg-black/30">
                 <div class="p-4 flex justify-between items-center bg-black/20">
-                    <h3 class="font-bold text-[9px] uppercase tracking-[0.3em] text-white/20 italic">📜 SEJARAH REKOD</h3>
-                    <button onclick="clearHistory()" class="text-[8px] text-red-500/50 hover:text-red-500 font-bold uppercase underline">Padam Sejarah</button>
+                    <h3 class="font-bold text-[9px] uppercase tracking-[0.3em] text-white/20 italic">📜 Sejarah Rekod Pergerakan & Tugas</h3>
+                    <button onclick="clearHistory()" class="text-[8px] text-red-500/50 hover:text-red-500 font-bold uppercase underline">Kosongkan Arkib</button>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-[11px]">
-                        <thead class="bg-black/40 text-[8px] uppercase text-white/10 tracking-widest">
+                        <thead class="bg-black/40 text-[8px] uppercase text-white/10 tracking-widest border-b border-white/5">
                             <tr>
                                 <th class="p-4">Tarikh</th>
-                                <th class="p-4">Waktu</th>
+                                <th class="p-4">Masa (Dari - Hingga)</th>
                                 <th class="p-4">Kategori</th>
-                                <th class="p-4">Maklumat</th>
-                                <th class="p-4">Status</th>
+                                <th class="p-4">Maklumat Ringkas</th>
+                                <th class="p-4">Tindakan</th>
                             </tr>
                         </thead>
                         <tbody id="historyBody" class="divide-y divide-white/5 text-white/10">
@@ -245,7 +249,7 @@
 
     <footer class="mt-12 mb-6 flex flex-col items-center gap-2">
         <p class="text-white/10 text-[8px] uppercase tracking-[0.8em]">Bahagian Penguat Kuasa Veterinar</p>
-        <span class="text-[7px] text-white/5 font-mono">Build v1.2.0-2026</span>
+        <span class="text-[7px] text-white/5 font-mono">v1.2.1 Stable-Build | April 2026</span>
     </footer>
 
     <audio id="notifSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
@@ -258,9 +262,9 @@
         const daysMs = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
         const monthsMs = ["JAN", "FEB", "MAC", "APR", "MEI", "JUN", "JUL", "OGOS", "SEP", "OKT", "NOV", "DIS"];
 
-        let currentType = 'tugas'; // Default type
-        let tasks = JSON.parse(localStorage.getItem('bpk_v120_active')) || [];
-        let history = JSON.parse(localStorage.getItem('bpk_v120_history')) || [];
+        let currentType = 'tugas';
+        let tasks = JSON.parse(localStorage.getItem('bpk_v121_active')) || [];
+        let history = JSON.parse(localStorage.getItem('bpk_v121_history')) || [];
 
         function setType(type) {
             currentType = type;
@@ -268,7 +272,7 @@
             document.getElementById('btnTugas').className = isLog ? "flex-1 py-1.5 text-[10px] font-bold rounded-md transition-all text-white/40" : "flex-1 py-1.5 text-[10px] font-bold rounded-md transition-all bg-blue-600 text-white";
             document.getElementById('btnLog').className = isLog ? "flex-1 py-1.5 text-[10px] font-bold rounded-md transition-all bg-green-600 text-white" : "flex-1 py-1.5 text-[10px] font-bold rounded-md transition-all text-white/40";
             document.getElementById('movementFields').style.display = isLog ? 'block' : 'none';
-            document.getElementById('labelTugas').innerText = isLog ? "Tujuan / Catatan" : "Butiran Tugasan";
+            document.getElementById('labelTugas').innerText = isLog ? "Tujuan Pergerakan / Catatan" : "Butiran Tugasan";
         }
 
         function updateClock() {
@@ -280,23 +284,25 @@
             document.getElementById('realDay').textContent = daysMs[now.getDay()];
             document.getElementById('realDate').textContent = `${now.getDate()} ${monthsMs[now.getMonth()]} ${now.getFullYear()}`;
             document.getElementById('realAMPM').textContent = ampm;
+            
             checkReminders(`${now.getDate().toString().padStart(2, '0')}-${(now.getMonth()+1).toString().padStart(2, '0')}-${now.getFullYear()}`, `${h}:${m} ${ampm}`);
         }
         setInterval(updateClock, 1000);
 
         flatpickr("#datePicker", { dateFormat: "d-m-Y" });
-        flatpickr("#timePicker", { enableTime: true, noCalendar: true, dateFormat: "h:i K" });
+        flatpickr("#timeFrom", { enableTime: true, noCalendar: true, dateFormat: "h:i K" });
+        flatpickr("#timeTo", { enableTime: true, noCalendar: true, dateFormat: "h:i K" });
 
         function saveEntry() {
             const date = document.getElementById('datePicker').value;
-            const time = document.getElementById('timePicker').value;
+            const tFrom = document.getElementById('timeFrom').value;
+            const tTo = document.getElementById('timeTo').value;
             const from = document.getElementById('fromLoc').value;
             const to = document.getElementById('toLoc').value;
             const odo = document.getElementById('odoVal').value;
             const note = document.getElementById('taskInput').value;
 
-            // At least one field must be filled
-            if(!date && !time && !from && !to && !odo && !note) return;
+            if(!date && !tFrom && !note) return;
 
             let dayName = "---";
             if(date) {
@@ -305,12 +311,19 @@
                 dayName = daysMs[dObj.getDay()];
             }
 
-            tasks.push({ id: Date.now(), type: currentType, date, day: dayName, time, from, to, odo, note, notified: false });
-            localStorage.setItem('bpk_v120_active', JSON.stringify(tasks));
+            tasks.push({ 
+                id: Date.now(), 
+                type: currentType, 
+                date, day: dayName, 
+                tFrom, tTo, 
+                from, to, odo, note, 
+                notified: false 
+            });
+
+            localStorage.setItem('bpk_v121_active', JSON.stringify(tasks));
             renderActive();
-            // Clear
-            ['datePicker','timePicker','fromLoc','toLoc','odoVal','taskInput'].forEach(id => document.getElementById(id).value = '');
-            Swal.fire({ icon: 'success', title: 'Rekod Disimpan', background: '#0f172a', color: '#fff', timer: 1000, showConfirmButton: false });
+            ['datePicker','timeFrom','timeTo','fromLoc','toLoc','odoVal','taskInput'].forEach(id => document.getElementById(id).value = '');
+            Swal.fire({ icon: 'success', title: 'Berjaya!', text: 'Rekod telah disimpan.', background: '#0f172a', color: '#fff', timer: 1000, showConfirmButton: false });
         }
 
         function renderActive() {
@@ -327,18 +340,21 @@
                 tr.innerHTML = `
                     <td class="p-4">
                         <div class="font-bold">${t.date || '-'}</div>
-                        <div class="text-[8px] uppercase opacity-50 font-bold">${t.day}</div>
+                        <div class="text-[8px] uppercase opacity-50 font-bold tracking-widest">${t.day}</div>
                     </td>
-                    <td class="p-4 font-digital">${t.time || '-'}</td>
+                    <td class="p-4 font-digital">
+                        <span class="text-[9px] opacity-40">DARI</span> ${t.tFrom || '--:--'} <br>
+                        <span class="text-[9px] opacity-40">HINGGA</span> ${t.tTo || '--:--'}
+                    </td>
                     <td class="p-4">
-                        <div class="text-[9px] font-bold opacity-40 uppercase mb-1">${t.type}</div>
-                        <div class="font-medium">${t.note || '-'}</div>
+                        <div class="text-[9px] font-bold opacity-30 uppercase mb-1">${t.type}</div>
+                        <div class="font-medium max-w-[200px] break-words">${t.note || '-'}</div>
                     </td>
                     <td class="p-4">
                         ${isLog ? `<div class="font-bold">${t.from || '?'} → ${t.to || '?'}</div><div class="text-[9px] opacity-60">ODO: ${t.odo || '-'} KM</div>` : '<span class="opacity-20">-</span>'}
                     </td>
                     <td class="p-4 text-right">
-                        <button onclick="deleteEntry(${t.id})" class="text-red-500 opacity-30 hover:opacity-100 text-[8px] font-bold">HAPUS</button>
+                        <button onclick="deleteEntry(${t.id})" class="text-red-500 opacity-30 hover:opacity-100 text-[8px] font-bold uppercase tracking-tighter">Hapus</button>
                     </td>
                 `;
                 body.appendChild(tr);
@@ -347,16 +363,16 @@
 
         function checkReminders(d, t) {
             tasks.forEach((task, index) => {
-                if(task.date === d && task.time === t && !task.notified) {
+                if(task.date === d && task.tFrom === t && !task.notified) {
                     task.notified = true;
                     document.getElementById('notifSound').play();
                     history.unshift({...task});
                     tasks.splice(index, 1);
-                    localStorage.setItem('bpk_v120_active', JSON.stringify(tasks));
-                    localStorage.setItem('bpk_v120_history', JSON.stringify(history));
+                    localStorage.setItem('bpk_v121_active', JSON.stringify(tasks));
+                    localStorage.setItem('bpk_v121_history', JSON.stringify(history));
                     renderActive();
                     renderHistory();
-                    Swal.fire({ title: 'MASA TIBA!', text: task.note, icon: 'info', background: '#0f172a', color: '#fff' });
+                    Swal.fire({ title: 'MASA TIBA!', text: `${task.note} (${task.tFrom})`, icon: 'info', background: '#0f172a', color: '#fff' });
                 }
             });
         }
@@ -369,18 +385,18 @@
                 tr.className = "border-b border-white/5 opacity-50";
                 tr.innerHTML = `
                     <td class="p-4">${h.date}</td>
-                    <td class="p-4">${h.time}</td>
+                    <td class="p-4 font-digital text-[10px]">${h.tFrom} - ${h.tTo}</td>
                     <td class="p-4 text-[9px] uppercase">${h.type}</td>
                     <td class="p-4"><b>${h.from ? h.from+' → '+h.to : h.note}</b></td>
-                    <td class="p-4 text-green-500 text-[8px] font-bold">LOGGED</td>
+                    <td class="p-4 text-green-500 text-[8px] font-bold uppercase">Rekod Log</td>
                 `;
                 body.appendChild(tr);
             });
         }
 
-        function deleteEntry(id) { tasks = tasks.filter(x => x.id !== id); localStorage.setItem('bpk_v120_active', JSON.stringify(tasks)); renderActive(); }
-        function clearHistory() { history = []; localStorage.setItem('bpk_v120_history', JSON.stringify(history)); renderHistory(); }
-        function requestPermission() { Notification.requestPermission().then(p => { if(p === 'granted') document.getElementById('notiBtn').innerText = "REMINDER AKTIF ✅"; }); }
+        function deleteEntry(id) { tasks = tasks.filter(x => x.id !== id); localStorage.setItem('bpk_v121_active', JSON.stringify(tasks)); renderActive(); }
+        function clearHistory() { history = []; localStorage.setItem('bpk_v121_history', JSON.stringify(history)); renderHistory(); }
+        function requestPermission() { Notification.requestPermission(); }
 
         renderActive();
         renderHistory();
