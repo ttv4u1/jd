@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Pergerakan Korporat | Smart Reminder</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top right, #0f172a, #1e293b, #000);
+            background-attachment: fixed;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+        }
+
+        .jata-bg {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60%;
+            opacity: 0.03;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .btn-3d {
+            background: linear-gradient(145deg, #3b82f6, #2563eb);
+            box-shadow: 0 8px 15px rgba(37, 99, 235, 0.4), inset 0 -4px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+        }
+
+        .btn-3d:active { transform: translateY(2px); box-shadow: none; }
+
+        .notification-active {
+            animation: pulse-red 2s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" class="jata-bg">
+
+    <header class="p-6">
+        <div class="container mx-auto flex flex-wrap justify-between items-center glass p-5" data-aos="fade-down">
+            <div class="flex items-center space-x-4">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" class="h-14">
+                <div class="h-10 w-[1px] bg-white/20"></div>
+                <img src="https://github.com/ttv4u1/KP/raw/main/logo%20DVS%20-%20logo%20Veterinar.png" class="h-14">
+            </div>
+            
+            <div class="text-center">
+                <h1 class="text-xl font-bold tracking-tighter uppercase">Sistem Notifikasi Pergerakan</h1>
+                <p class="text-xs text-blue-400">Bahagian Penguat Kuasa Veterinar</p>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <button onclick="requestPermission()" id="notiBtn" class="bg-red-500 hover:bg-red-600 text-white text-[10px] px-3 py-2 rounded-full font-bold transition-all">
+                    AKTIFKAN NOTIFIKASI 🔔
+                </button>
+                <img src="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png" class="h-12 rounded-lg">
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Input Card -->
+            <div class="lg:col-span-1 glass p-8" data-aos="zoom-in-right">
+                <h3 class="text-xl font-bold mb-6 flex items-center">
+                    <span class="mr-2">📅</span> Tambah Jadual Baru
+                </h3>
+                
+                <div class="space-y-4">
+                    <input type="text" id="datePicker" class="w-full bg-white/5 border border-white/10 rounded-xl p-4" placeholder="Pilih Tarikh">
+                    <input type="text" id="timePicker" class="w-full bg-white/5 border border-white/10 rounded-xl p-4" placeholder="Pilih Masa">
+                    <textarea id="taskInput" rows="3" class="w-full bg-white/5 border border-white/10 rounded-xl p-4" placeholder="Tujuan / Lokasi Pergerakan"></textarea>
+                    
+                    <button onclick="saveTask()" class="w-full btn-3d py-4 rounded-xl font-bold text-white uppercase">
+                        Simpan & Set Peringatan
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table Card -->
+            <div class="lg:col-span-2 glass overflow-hidden" data-aos="zoom-in-left">
+                <div class="p-6 bg-white/5 border-b border-white/10 flex justify-between items-center">
+                    <h3 class="font-bold uppercase tracking-widest text-blue-400">Senarai Tugas Aktif</h3>
+                    <div id="clock" class="text-lg font-mono text-yellow-400">00:00:00</div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-white/5 text-xs">
+                            <tr>
+                                <th class="p-4">Tarikh & Hari</th>
+                                <th class="p-4">Masa</th>
+                                <th class="p-4">Tugas</th>
+                                <th class="p-4">Status</th>
+                                <th class="p-4">Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="taskTableBody" class="text-sm">
+                            <!-- Data injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        AOS.init();
+
+        // Setup Pickers
+        flatpickr("#datePicker", { dateFormat: "d-m-Y", minDate: "today" });
+        flatpickr("#timePicker", { enableTime: true, noCalendar: true, dateFormat: "h:i K" });
+
+        // Clock Function
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', { hour12: true });
+            checkReminders(now);
+        }, 1000);
+
+        // Request Permission
+        function requestPermission() {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    document.getElementById('notiBtn').innerText = "NOTIFIKASI AKTIF ✅";
+                    document.getElementById('notiBtn').className = "bg-green-600 text-white text-[10px] px-3 py-2 rounded-full font-bold transition-all";
+                }
+            });
+        }
+
+        // Local Storage Logic
+        let tasks = JSON.parse(localStorage.getItem('corpTasks')) || [];
+
+        function saveTask() {
+            const date = document.getElementById('datePicker').value;
+            const time = document.getElementById('timePicker').value;
+            const task = document.getElementById('taskInput').value;
+
+            if (!date || !time || !task) {
+                Swal.fire('Ralat', 'Sila isi semua maklumat', 'error');
+                return;
+            }
+
+            const newTask = {
+                id: Date.now(),
+                date,
+                time,
+                task,
+                notified: false
+            };
+
+            tasks.push(newTask);
+            localStorage.setItem('corpTasks', JSON.stringify(tasks));
+            renderTasks();
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Disimpan!',
+                text: 'Notifikasi akan keluar pada masa ditetapkan.',
+                background: '#1e293b',
+                color: '#fff'
+            });
+        }
+
+        function renderTasks() {
+            const body = document.getElementById('taskTableBody');
+            body.innerHTML = '';
+            
+            tasks.forEach(t => {
+                const row = document.createElement('tr');
+                row.className = "border-b border-white/5 hover:bg-white/5 transition";
+                row.innerHTML = `
+                    <td class="p-4 font-bold text-blue-300">${t.date}</td>
+                    <td class="p-4"><span class="bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded text-xs font-bold">${t.time}</span></td>
+                    <td class="p-4 text-white/70">${t.task}</td>
+                    <td class="p-4">
+                        <span class="${t.notified ? 'text-green-400' : 'text-gray-400 animate-pulse'}">
+                            ${t.notified ? '✅ Selesai' : '⏳ Menunggu'}
+                        </span>
+                    </td>
+                    <td class="p-4">
+                        <button onclick="deleteTask(${t.id})" class="text-red-400 hover:text-red-200">Hapus</button>
+                    </td>
+                `;
+                body.appendChild(row);
+            });
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            localStorage.setItem('corpTasks', JSON.stringify(tasks));
+            renderTasks();
+        }
+
+        // REMINDER ENGINE
+        function checkReminders(now) {
+            const currentTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+            const currentDate = now.toLocaleDateString('en-GB').replace(/\//g, '-'); // Format DD-MM-YYYY
+
+            tasks.forEach(t => {
+                // Bandingkan tarikh dan masa (tanpa saat)
+                if (t.date === currentDate && t.time === currentTime && !t.notified) {
+                    triggerNotification(t);
+                    t.notified = true;
+                    localStorage.setItem('corpTasks', JSON.stringify(tasks));
+                    renderTasks();
+                }
+            });
+        }
+
+        function triggerNotification(task) {
+            // Browser notification
+            if (Notification.permission === "granted") {
+                new Notification("PERINGATAN TUGAS!", {
+                    body: `Masa: ${task.time}\nTugas: ${task.task}`,
+                    icon: "https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg"
+                });
+            }
+
+            // In-app alert
+            Swal.fire({
+                title: 'WAKTU TUGASAN!',
+                text: task.task,
+                icon: 'warning',
+                confirmButtonText: 'Faham',
+                backdrop: `rgba(255,191,0,0.4)`
+            });
+            
+            // Sound effect
+            const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+            audio.play();
+        }
+
+        // Load on start
+        renderTasks();
+    </script>
+</body>
+</html>
