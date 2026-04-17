@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BPK Cloud Master | v13.0.0</title>
+    <title>BPK Cloud Suite | v14.0.0</title>
     
     <link rel="icon" type="image/png" href="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png">
 
@@ -86,23 +86,26 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        .swal-glass {
-            background: rgba(15, 23, 42, 0.98) !important;
-            backdrop-filter: blur(25px) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            color: white !important;
-            border-radius: 30px !important;
-        }
-
+        /* Official Report PDF Template Styles */
         #reportTemplate {
             color: black;
-            padding: 50px;
+            padding: 40px;
             background: white;
-            width: 1000px;
+            width: 900px;
             position: absolute;
             left: -9999px;
             font-family: Arial, sans-serif;
+            overflow: hidden;
         }
+        .report-watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            opacity: 0.05;
+            z-index: 0;
+        }
+        .report-content-box { position: relative; z-index: 1; }
 
         .hidden { display: none !important; }
         ::-webkit-scrollbar { width: 5px; }
@@ -111,36 +114,37 @@
 </head>
 <body class="p-3 md:p-6">
 
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 opacity-[0.03] pointer-events-none -z-10">
+
     <!-- LOGIN SCREEN -->
     <div id="loginScreen">
-        <div class="glass p-10 max-w-sm w-full text-center border-t-4 border-blue-500 shadow-2xl">
-            <img src="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png" class="h-24 mx-auto mb-6">
+        <div class="glass p-10 max-w-sm w-full text-center border-t-4 border-blue-500 shadow-2xl" data-aos="zoom-in">
+            <img src="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png" class="h-24 mx-auto mb-6 drop-shadow-2xl">
             <h2 class="text-2xl font-extrabold uppercase tracking-widest mb-1 text-white">BPK CLOUD</h2>
-            <p class="text-[10px] text-blue-400 mb-8 uppercase tracking-widest font-bold">The Masterpiece Suite v13.0</p>
+            <p class="text-[10px] text-blue-400 mb-10 uppercase tracking-widest font-bold">Premium Intelligence v14.0.0</p>
             <button onclick="login()" class="flex items-center justify-center gap-4 w-full py-4 px-6 rounded-2xl font-bold text-sm border border-white/10 bg-white/5 hover:bg-white/10 transition shadow-xl text-white">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="h-6">
-                <span>LOGIN DENGAN GOOGLE</span>
+                <span>MASUK DENGAN GOOGLE</span>
             </button>
-            <p id="loginStatus" class="mt-4 text-[10px] text-yellow-500 hidden font-bold">Sedang Menyambung ke Cloud...</p>
         </div>
     </div>
 
-    <!-- MAIN APP -->
+    <!-- MAIN APP CONTENT -->
     <div id="mainApp" class="hidden">
         <header class="container mx-auto mb-8">
             <div class="glass p-4 flex flex-wrap justify-between items-center gap-6 shadow-2xl border-b border-white/10">
                 <div class="flex items-center gap-4">
                     <img src="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png" class="h-10 lg:h-14 rounded-lg">
-                    <div class="flex flex-col text-left">
-                        <h1 class="text-white text-sm lg:text-lg font-extrabold uppercase leading-none">BPK VETERINAR</h1>
-                        <div class="flex items-center gap-2 mt-2">
+                    <div class="flex flex-col">
+                        <h1 class="text-white text-sm lg:text-lg font-extrabold uppercase leading-none tracking-tight">BPK VETERINAR</h1>
+                        <div class="flex items-center gap-2 mt-1.5">
                             <img id="userAvatar" class="h-5 w-5 rounded-full border border-white/20">
-                            <span id="userName" class="text-[10px] text-blue-400 font-bold uppercase tracking-widest">---</span>
+                            <span id="userName" class="text-[10px] text-blue-400 font-bold uppercase">---</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- CLOCK 12H -->
+                <!-- DIGITAL CLOCK 12H AM/PM -->
                 <div class="flex items-center gap-4 bg-black/40 px-6 py-3 rounded-2xl border border-white/5 shadow-inner">
                     <h1 id="realTime" class="text-xl md:text-3xl font-digital font-bold text-blue-400 uppercase tracking-tighter">00:00:00 AM</h1>
                     <div class="h-8 w-[1px] bg-white/10"></div>
@@ -149,17 +153,17 @@
                         <p id="realDate" class="text-[9px] text-white/40">--/--/----</p>
                     </div>
                 </div>
-                <button onclick="logout()" class="bg-red-500/10 border border-red-500/30 text-red-500 text-[9px] px-5 py-2 rounded-full font-bold hover:bg-red-600 transition shadow-lg uppercase">Keluar 🔒</button>
+                <button onclick="logout()" class="bg-red-500/10 border border-red-500/30 text-red-500 text-[10px] px-6 py-2 rounded-full font-bold hover:bg-red-600 transition shadow-lg uppercase">Logout 🔒</button>
             </div>
         </header>
 
         <main class="container mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
-                <!-- Borang Input -->
+                <!-- COLUMN 1: FORM -->
                 <div class="lg:col-span-4 space-y-6">
                     <div class="glass p-6 border-t-4 border-blue-500 shadow-xl">
-                        <div class="mb-6 flex bg-black/50 p-1.5 rounded-xl border border-white/5">
+                        <div class="mb-6 flex bg-black/50 p-1.5 rounded-xl border border-white/5 shadow-inner">
                             <button onclick="setType('tugas')" id="btnTugas" class="flex-1 py-2 text-[10px] font-bold rounded-lg transition-all bg-blue-600 text-white uppercase shadow-lg">Tugas</button>
                             <button onclick="setType('log')" id="btnLog" class="flex-1 py-2 text-[10px] font-bold rounded-lg transition-all text-white/40 uppercase">Gerak</button>
                             <button onclick="setType('minyak')" id="btnMinyak" class="flex-1 py-2 text-[10px] font-bold rounded-lg transition-all text-white/40 uppercase">Minyak</button>
@@ -177,19 +181,21 @@
                                 <div><label class="label-pro">Akhir</label><input type="text" id="timeTo" class="input-field font-digital text-center"></div>
                             </div>
 
+                            <!-- Odometer Fields -->
                             <div id="odoFields" class="hidden space-y-4">
-                                <label class="label-pro text-green-400">Pengisian Odometer (KM)</label>
+                                <label class="label-pro text-green-400">Pengiraan Odometer (KM)</label>
                                 <div class="grid grid-cols-2 gap-3">
                                     <input type="number" id="odoStart" class="input-field border-green-500/30" placeholder="Mula">
                                     <input type="number" id="odoEnd" class="input-field border-green-500/30" placeholder="Tamat">
                                 </div>
                             </div>
 
+                            <!-- Fuel Fields -->
                             <div id="fuelFields" class="hidden space-y-4">
                                 <label class="label-pro text-red-400">Kos Minyak (RM)</label>
                                 <div class="grid grid-cols-2 gap-3">
-                                    <input type="number" id="rmInitial" class="input-field border-red-500/30" placeholder="Semasa Isi">
-                                    <input type="number" id="rmOffice" class="input-field border-red-500/30" placeholder="Balik Pejabat">
+                                    <input type="number" id="rmInitial" class="input-field border-red-500/30" placeholder="RM Semasa">
+                                    <input type="number" id="rmOffice" class="input-field border-red-500/30" placeholder="RM Balik">
                                 </div>
                                 <select id="fuelType" class="input-field">
                                     <option value="RON 95">RON 95</option>
@@ -199,42 +205,44 @@
                             </div>
 
                             <div>
-                                <label class="label-pro">Butiran / Catatan / Laluan</label>
-                                <textarea id="taskInput" rows="3" class="input-field" placeholder="Catatan rasmi tugasan..."></textarea>
+                                <label class="label-pro">Butiran / Laluan Tugasan</label>
+                                <textarea id="taskInput" rows="3" class="input-field" placeholder="Keterangan perincian tugas atau laluan..."></textarea>
                             </div>
                             
-                            <button onclick="saveEntry()" class="w-full btn-3d py-4 text-xs font-extrabold uppercase tracking-widest text-white mt-2 shadow-blue-500/20">Cloud Save ☁️</button>
+                            <button onclick="saveEntry()" class="w-full btn-3d py-4 text-xs font-extrabold uppercase tracking-widest text-white mt-2 shadow-blue-500/20">Sync to Cloud 💾</button>
                         </div>
                     </div>
 
-                    <!-- REPORT HUB -->
+                    <!-- EXPORT HUB -->
                     <div class="glass p-5 border-l-4 border-yellow-500 shadow-xl">
                         <h3 class="text-[10px] font-extrabold text-yellow-500 uppercase tracking-widest mb-4 text-center">Multi-Platform Export Hub</h3>
-                        <button onclick="generateOfficialPDF()" class="w-full btn-3d bg-red-600/50 text-[10px] py-4 rounded-xl uppercase border border-red-500/30 mb-3 font-bold">📄 PDF Penyata Rasmi</button>
-                        <div class="grid grid-cols-2 gap-2 mb-3">
-                            <button onclick="exportWord()" class="btn-3d bg-blue-700/50 text-[9px] py-2 rounded uppercase font-bold text-white">Word</button>
-                            <button onclick="exportExcel()" class="btn-3d bg-green-700/50 text-[9px] py-2 rounded uppercase font-bold text-white">Excel</button>
-                            <button onclick="exportPPT()" class="btn-3d bg-orange-700/50 text-[9px] py-2 rounded uppercase font-bold text-white">PPT</button>
-                            <button onclick="exportNotepad()" class="btn-3d bg-gray-700/50 text-[9px] py-2 rounded uppercase font-bold text-white">Notepad</button>
+                        <button onclick="generateOfficialPDF()" class="w-full btn-3d bg-red-600/50 text-[10px] py-4 rounded-xl uppercase border border-red-500/30 mb-3 font-bold">📄 PDF Penyata Rasmi (HQ)</button>
+                        <div class="grid grid-cols-3 gap-2 mb-3">
+                            <button onclick="exportWord()" class="btn-3d bg-blue-700/50 text-[8px] py-2 rounded uppercase font-bold text-white">Word</button>
+                            <button onclick="exportExcel()" class="btn-3d bg-green-700/50 text-[8px] py-2 rounded uppercase font-bold text-white">Excel</button>
+                            <button onclick="exportPPT()" class="btn-3d bg-orange-700/50 text-[8px] py-2 rounded uppercase font-bold text-white">PPT</button>
                         </div>
-                        <button onclick="shareToNotes()" class="w-full btn-3d bg-indigo-700/50 text-[9px] py-2 rounded uppercase font-bold text-white">📱 Share to Mobile Notes</button>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="exportNotepad()" class="btn-3d bg-gray-600/50 text-[8px] py-2 rounded uppercase font-bold text-white">Notepad</button>
+                            <button onclick="shareToNotes()" class="btn-3d bg-indigo-700/50 text-[8px] py-2 rounded uppercase font-bold text-white">📱 Share Notes</button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- LIVE FEED -->
+                <!-- COLUMN 2: LIVE LOG -->
                 <div class="lg:col-span-8">
                     <div class="glass flex flex-col min-h-[600px] shadow-2xl overflow-hidden border-b-4 border-blue-500/30">
                         <div class="p-5 bg-white/5 border-b border-white/5 flex flex-wrap justify-between items-center gap-4">
-                            <h3 class="font-bold uppercase tracking-widest text-[11px] text-blue-300">Cloud Sync Active Log</h3>
-                            <button onclick="showMonthSummary()" class="text-[10px] bg-yellow-500/20 text-yellow-400 px-4 py-1 rounded-full font-bold border border-yellow-500/30 uppercase">Rumusan Analitik</button>
+                            <h3 class="font-bold uppercase tracking-widest text-[11px] text-blue-300">Live Activity Feed</h3>
+                            <button onclick="showMonthSummary()" class="text-[10px] bg-yellow-500/20 text-yellow-400 px-4 py-1 rounded-full font-bold border border-yellow-500/30 uppercase">Rumusan Harian/Bulanan</button>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-sm">
                                 <thead class="bg-black/30 text-[9px] uppercase text-white/40 tracking-[0.2em] border-b border-white/5">
                                     <tr>
-                                        <th class="p-5">Tarikh/Waktu</th>
+                                        <th class="p-5">Waktu/Fasa</th>
                                         <th class="p-5">Butiran & Analisis</th>
-                                        <th class="p-5 text-right">Aksi</th>
+                                        <th class="p-5 text-right">Tindakan</th>
                                     </tr>
                                 </thead>
                                 <tbody id="activeBody" class="divide-y divide-white/5 text-white"></tbody>
@@ -246,40 +254,56 @@
         </main>
     </div>
 
-    <!-- PDF TEMPLATE (LETTERHEAD) -->
+    <!-- OFFICIAL REPORT TEMPLATE (OFF-SCREEN) -->
     <div id="reportTemplate">
-        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 4px double #1a365d; padding-bottom: 20px;">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" width="90">
-            <div style="text-align: center; flex-grow: 1; padding: 0 20px;">
-                <h2 style="margin:0; font-size: 20px; font-weight: 900; color: #1a365d; text-transform: uppercase;">Jabatan Perkhidmatan Veterinar</h2>
-                <h3 style="margin:5px 0; font-size: 14px; font-weight: 700; color: #2d3748; text-transform: uppercase;">Kementerian Pertanian dan Keterjaminan Makanan</h3>
-                <p style="margin:0; font-size: 11px; text-transform: uppercase; color: #4a5568;">Bahagian Penguat Kuasa Veterinar (BPK)</p>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" class="report-watermark">
+        
+        <div class="report-content-box">
+            <!-- Header Section -->
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 5px double #1a365d; padding-bottom: 20px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" width="90">
+                <div style="text-align: center; flex-grow: 1; padding: 0 20px;">
+                    <h2 style="margin:0; font-size: 20px; font-weight: 900; color: #1a365d; text-transform: uppercase;">Jabatan Perkhidmatan Veterinar</h2>
+                    <h3 style="margin:5px 0; font-size: 14px; font-weight: 700; color: #2d3748; text-transform: uppercase;">Kementerian Pertanian dan Keterjaminan Makanan</h3>
+                    <p style="margin:0; font-size: 11px; text-transform: uppercase; color: #4a5568; font-weight: bold;">Bahagian Penguat Kuasa Veterinar (BPK)</p>
+                </div>
+                <img src="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png" width="90">
             </div>
-            <img src="https://github.com/ttv4u1/KP/raw/main/Logo%20Penguatkuasa.png" width="90">
-        </div>
-        <h3 style="text-align: center; text-decoration: underline; margin-top: 30px; font-size: 16px; color: #1a365d; text-transform: uppercase;">Penyata Bulanan Pergerakan, Tugasan & Kos Minyak</h3>
-        <p style="text-align: center; font-size: 12px; font-weight: bold; margin-bottom: 20px;">RINGKASAN DATA: <span id="pdfMonthHeader"></span></p>
-        <div id="pdfContent"></div>
-        <div style="margin-top: 40px; display: flex; justify-content: space-between; font-size: 11px;">
-            <div style="line-height: 1.8;">
-                <p>JUMLAH JARAK SEBULAN: <span id="pdfTotalKM" style="font-weight:bold; color: #22c55e;"></span> KM</p>
-                <p>JUMLAH KOS MINYAK SEBULAN: RM <span id="pdfTotalRM" style="font-weight:bold; color: #ef4444;"></span></p>
-                <p>DICETAK PADA: <span id="pdfPrintDate"></span></p>
-            </div>
-            <div style="text-align: center; width: 220px;">
-                <p>Tandatangan Pegawai Pelapor:</p><br><br><br>
-                <p>__________________________</p>
-                <p><b>PENGUAT KUASA VETERINAR</b></p>
+
+            <!-- Title Section -->
+            <h3 style="text-align: center; text-decoration: underline; margin-top: 35px; font-size: 16px; color: #1a365d; text-transform: uppercase; font-weight: bold;">Penyata Bulanan Pergerakan, Tugasan & Kos Minyak</h3>
+            <p style="text-align: center; font-size: 12px; font-weight: bold; margin-bottom: 25px;">BAGI BULAN: <span id="pdfMonthHeader"></span></p>
+
+            <!-- Table Container -->
+            <div id="pdfContent"></div>
+
+            <!-- Footer Section -->
+            <div style="margin-top: 50px; display: flex; justify-content: space-between; font-size: 11px;">
+                <div style="line-height: 2;">
+                    <div style="background: #f0f4f8; padding: 10px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                        <p>JUMLAH KESELURUHAN JARAK: <span id="pdfTotalKM" style="font-weight:bold; color: #22c55e;"></span> KM</p>
+                        <p>JUMLAH KESELURUHAN KOS MINYAK: RM <span id="pdfTotalRM" style="font-weight:bold; color: #ef4444;"></span></p>
+                    </div>
+                    <p style="margin-top: 10px;">DICETAK PADA: <span id="pdfPrintDate"></span></p>
+                </div>
+                <div style="text-align: center; width: 250px;">
+                    <p>Tandatangan Pegawai Pelapor:</p>
+                    <br><br><br>
+                    <p>__________________________</p>
+                    <p><b>( <span id="pdfOfficerName"></span> )</b></p>
+                    <p>PENGUAT KUASA VETERINAR</p>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
+    <audio id="notifSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        // --- FIREBASE CONFIG ---
+        // --- FIREBASE CONFIG (STAY v13) ---
         const firebaseConfig = {
           apiKey: "AIzaSyBCV-68YWkZkDjIodxWmn6z-d9H7ZS8bDs",
           authDomain: "bpk-cloud-system.firebaseapp.com",
@@ -296,7 +320,7 @@
         let currentUser = null;
         let tasks = [];
 
-        // AUTH MONITOR
+        // Auth Logic
         auth.onAuthStateChanged(user => {
             if (user) {
                 currentUser = user;
@@ -311,19 +335,9 @@
             }
         });
 
-        async function login() {
-            document.getElementById('loginStatus').classList.remove('hidden');
-            const provider = new firebase.auth.GoogleAuthProvider();
-            try {
-                await auth.signInWithPopup(provider);
-            } catch (error) {
-                await auth.signInWithRedirect(provider);
-            }
-        }
-
+        function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
         function logout() { auth.signOut(); }
 
-        // DATA SYNC
         function syncData() {
             db.collection("users").doc(currentUser.uid).collection("logs")
               .orderBy("id", "desc")
@@ -333,33 +347,22 @@
               });
         }
 
-        // TUKAR TAB
+        // Tab Switching Logic (v14 Fixed)
         function setType(type) {
             window.currentType = type;
-            const bTugas = document.getElementById('btnTugas');
-            const bLog = document.getElementById('btnLog');
-            const bMinyak = document.getElementById('btnMinyak');
+            ['btnTugas', 'btnLog', 'btnMinyak'].forEach(b => document.getElementById(b).className = "flex-1 py-2 text-[9px] font-bold rounded-lg transition-all text-white/40 uppercase shadow-none");
+            const activeBtn = type === 'tugas' ? 'btnTugas' : type === 'log' ? 'btnLog' : 'btnMinyak';
+            const color = type === 'tugas' ? 'bg-blue-600' : type === 'log' ? 'bg-green-600' : 'bg-red-600';
+            document.getElementById(activeBtn).className = `flex-1 py-2 text-[10px] font-bold rounded-lg transition-all ${color} text-white uppercase shadow-lg`;
 
-            [bTugas, bLog, bMinyak].forEach(b => b.className = "flex-1 py-2 text-[9px] font-bold rounded-lg transition-all text-white/40 uppercase shadow-none");
-            document.getElementById('odoFields').classList.add('hidden');
-            document.getElementById('fuelFields').classList.add('hidden');
-
-            if(type === 'tugas') bTugas.className = "flex-1 py-2 text-[10px] font-bold rounded-lg transition-all bg-blue-600 text-white uppercase shadow-lg";
-            if(type === 'log') {
-                bLog.className = "flex-1 py-2 text-[10px] font-bold rounded-lg transition-all bg-green-600 text-white uppercase shadow-lg";
-                document.getElementById('odoFields').classList.remove('hidden');
-            }
-            if(type === 'minyak') {
-                bMinyak.className = "flex-1 py-2 text-[10px] font-bold rounded-lg transition-all bg-red-600 text-white uppercase shadow-lg";
-                document.getElementById('odoFields').classList.remove('hidden');
-                document.getElementById('fuelFields').classList.remove('hidden');
-            }
+            document.getElementById('odoFields').style.display = (type === 'log' || type === 'minyak') ? 'block' : 'none';
+            document.getElementById('fuelFields').style.display = (type === 'minyak') ? 'block' : 'none';
         }
 
         async function saveEntry() {
             const date = document.getElementById('datePicker').value;
             const tFrom = document.getElementById('timeFrom').value;
-            if(!date || !tFrom) return Swal.fire('Ralat', 'Tarikh & Masa Wajib', 'error');
+            if(!date || !tFrom) return Swal.fire('Ralat', 'Tarikh & Masa Wajib.', 'error');
 
             const oStart = parseFloat(document.getElementById('odoStart').value) || 0;
             const oEnd = parseFloat(document.getElementById('odoEnd').value) || 0;
@@ -384,7 +387,7 @@
             ['datePicker','timeFrom','timeSemasa','timeTo','odoStart','odoEnd','rmInitial','rmOffice','taskInput'].forEach(id => {
                 if(document.getElementById(id)) document.getElementById(id).value = '';
             });
-            Swal.fire({ icon: 'success', title: 'Tersimpan!', timer: 800, showConfirmButton: false });
+            Swal.fire({ icon: 'success', title: 'Data Berjaya Disimpan', timer: 1000, showConfirmButton: false });
         }
 
         function renderUI() {
@@ -404,7 +407,7 @@
                 const header = document.createElement('tr');
                 header.className = "clickable-header bg-blue-500/10 border-l-4 border-blue-500 shadow-lg";
                 header.onclick = () => showDaySummary(date);
-                header.innerHTML = `<td colspan="3" class="p-3 text-[10px] font-extrabold uppercase text-blue-300 font-digital">📅 ${date} (${dayTasks[0].day}) <span class="ml-2 opacity-50 italic">[Summary]</span></td>`;
+                header.innerHTML = `<td colspan="3" class="p-3 text-[10px] font-extrabold uppercase text-blue-300 font-digital">📅 ${date} (${dayTasks[0].day}) <span class="ml-2 opacity-50 italic">[Klik Lihat Rumusan]</span></td>`;
                 body.appendChild(header);
 
                 dayTasks.forEach(t => {
@@ -418,7 +421,7 @@
                         <td class="p-4">
                             <div class="font-medium text-[12px]">${t.note}</div>
                             ${t.dist > 0 ? `<div class="text-[9px] text-green-500 font-bold uppercase mt-1">KM: +${t.dist} | ODO: ${t.odoEnd}</div>` : ''}
-                            ${t.rmMinyak > 0 ? `<div class="text-[9px] text-red-400 font-extrabold mt-1">MINYAK: RM ${t.rmMinyak.toFixed(2)} (${t.fuelType})</div>` : ''}
+                            ${t.rmMinyak > 0 ? `<div class="text-[9px] text-red-400 font-extrabold mt-1 uppercase">MINYAK: RM ${t.rmMinyak.toFixed(2)} (${t.fuelType})</div>` : ''}
                         </td>
                         <td class="p-4 text-right">
                             <button onclick="event.stopPropagation(); deleteEntry('${t.docId}')" class="text-red-500/30 hover:text-red-500 text-[9px] font-bold uppercase underline">Padam</button>
@@ -429,7 +432,7 @@
             });
         }
 
-        // --- EXPORT PDF ENGINE ---
+        // Official PDF Engine (v14 Fixed)
         async function generateOfficialPDF() {
             const curMY = (new Date().getMonth()+1).toString().padStart(2,'0') + '-' + new Date().getFullYear();
             const monthData = [...tasks].filter(t => t.monthYear === curMY).reverse();
@@ -460,43 +463,55 @@
             document.getElementById('pdfOfficerName').innerText = currentUser.displayName.toUpperCase();
 
             const element = document.getElementById('reportTemplate');
-            html2pdf().set({ margin: 10, filename: `BPK_Log_${curMY}.pdf`, html2canvas: { scale: 2 }, jsPDF: { format: 'a4' } }).from(element).save();
+            html2pdf().set({ 
+                margin: 10, 
+                filename: `Penyata_Official_BPK_${curMY}.pdf`, 
+                image: { type: 'jpeg', quality: 0.98 }, 
+                html2canvas: { scale: 3, useCORS: true }, 
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
+            }).from(element).save();
         }
 
-        // --- OTHER EXPORTS ---
+        // Other Multi-Platform Exports
         function exportExcel() {
             const ws = XLSX.utils.json_to_sheet(tasks);
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Log");
-            XLSX.writeFile(wb, `Log_BPK.xlsx`);
-        }
-        function exportWord() {
-            let content = "LAPORAN BPK\n\n";
-            tasks.forEach(t => content += `[${t.date}] ${t.note} (KM: ${t.dist} | RM: ${t.rmMinyak})\n`);
-            const blob = new Blob([content], {type:"application/msword"});
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `BPK_Word.doc`; a.click();
-        }
-        function exportPPT() {
-            let pptx = new PptxGenJS();
-            tasks.slice(0,5).forEach(t => {
-                let slide = pptx.addSlide();
-                slide.addText(`Log ${t.date}`, {x:1, y:1, fontSize:24, bold:true});
-                slide.addText(t.note, {x:1, y:2, fontSize:18});
-            });
-            pptx.writeFile({ fileName: `BPK_Log.pptx` });
-        }
-        function exportNotepad() {
-            let text = tasks.map(t => `${t.date} | ${t.type} | ${t.note}`).join('\n');
-            const blob = new Blob([text], {type: "text/plain"});
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Log.txt`; a.click();
-        }
-        function shareToNotes() {
-            const text = tasks.slice(0,3).map(t => `${t.date}: ${t.note}`).join('\n');
-            if (navigator.share) navigator.share({ title: 'Log BPK', text: text });
-            else alert('Sila gunakan export Word di PC.');
+            XLSX.utils.book_append_sheet(wb, ws, "MasterLog");
+            XLSX.writeFile(wb, `BPK_Log_${Date.now()}.xlsx`);
         }
 
-        // --- UI UTILS ---
+        function exportWord() {
+            let content = "<html><body><h2 style='text-align:center'>LAPORAN LOG BPK VETERINAR</h2>";
+            tasks.forEach(t => content += `<p><b>${t.date}</b> | ${t.day} | ${t.tFrom} | ${t.type.toUpperCase()}: ${t.note} (KM: ${t.dist} | RM: ${t.rmMinyak})</p>`);
+            content += "</body></html>";
+            const blob = new Blob(['\ufeff', content], {type:"application/msword"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href=url; a.download=`Penyata_Log.doc`; a.click();
+        }
+
+        function exportPPT() {
+            let pptx = new PptxGenJS();
+            tasks.slice(0,10).forEach(t => {
+                let slide = pptx.addSlide();
+                slide.addText(`LOG BPK: ${t.date}`, { x:0.5, y:0.5, fontSize:24, bold:true, color:'0072ff' });
+                slide.addText(t.note, { x:0.5, y:2, fontSize:18 });
+            });
+            pptx.writeFile({ fileName: `BPK_Presentation.pptx` });
+        }
+
+        function exportNotepad() {
+            let text = tasks.map(t => `${t.date} | ${t.tFrom} | ${t.type.toUpperCase()} | ${t.note}`).join('\n');
+            const blob = new Blob([text], {type: "text/plain"});
+            const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`Log_BPK.txt`; a.click();
+        }
+
+        function shareToNotes() {
+            const text = tasks.slice(0,5).map(t => `${t.date}: ${t.note}`).join('\n');
+            if (navigator.share) navigator.share({ title: 'Log BPK', text: text });
+            else alert('Gunakan Desktop untuk muat turun penuh.');
+        }
+
+        // --- UTILS ---
         setInterval(() => {
             const now = new Date();
             document.getElementById('realTime').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
@@ -506,22 +521,24 @@
 
         function showDaySummary(date) {
             const dayRecords = tasks.filter(t => t.date === date);
-            const totalFuel = dayRecords.reduce((s,t) => s + (t.rmMinyak || 0), 0);
-            const totalKM = dayRecords.reduce((s,t) => s + (t.dist || 0), 0);
+            const tKM = dayRecords.reduce((s,t) => s + (t.dist || 0), 0);
+            const tRM = dayRecords.reduce((s,t) => s + (t.rmMinyak || 0), 0);
             Swal.fire({
-                customClass:{popup:'swal-glass'}, title:`Analisis: ${date}`,
-                html:`<div class="grid grid-cols-2 gap-3"><div class="bg-red-500/10 p-4 rounded-xl text-center"><p class="text-[9px] uppercase font-bold text-red-400">Total RM</p><p class="text-xl font-bold">RM ${totalFuel.toFixed(2)}</p></div><div class="bg-green-500/10 p-4 rounded-xl text-center"><p class="text-[9px] uppercase font-bold text-green-400">Total KM</p><p class="text-xl font-bold">${totalKM} KM</p></div></div>`
+                customClass:{popup:'swal-glass'},
+                title:`Summary: ${date}`,
+                html:`<div class="grid grid-cols-2 gap-3 mb-6"><div class="bg-red-500/10 p-4 rounded-xl text-center"><p class="text-[9px] uppercase font-bold text-red-400">Total RM</p><p class="text-xl font-bold">RM ${tRM.toFixed(2)}</p></div><div class="bg-green-500/10 p-4 rounded-xl text-center"><p class="text-[9px] uppercase font-bold text-green-400">Total KM</p><p class="text-xl font-bold">${tKM} KM</p></div></div>`
             });
         }
 
         function showMonthSummary() {
             const curMY = (new Date().getMonth()+1).toString().padStart(2,'0') + '-' + new Date().getFullYear();
             const monthData = tasks.filter(t => t.monthYear === curMY);
-            const totalRM = monthData.reduce((s,t) => s + (t.rmMinyak || 0), 0);
-            const totalKM = monthData.reduce((s,t) => s + (t.dist || 0), 0);
+            const tRM = monthData.reduce((s,t) => s + (t.rmMinyak || 0), 0);
+            const tKM = monthData.reduce((s,t) => s + (t.dist || 0), 0);
             Swal.fire({
-                customClass:{popup:'swal-glass'}, title:`Analitik Bulanan`,
-                html:`<div class="grid grid-cols-2 gap-3"><div class="bg-red-500/20 p-5 rounded-2xl"><p class="text-[9px] font-bold text-red-400 uppercase">RM Minyak</p><p class="text-2xl font-bold">RM ${totalRM.toFixed(2)}</p></div><div class="bg-green-500/20 p-5 rounded-2xl"><p class="text-[9px] font-bold text-green-400 uppercase">KM Jarak</p><p class="text-2xl font-bold">${totalKM} KM</p></div></div>`
+                customClass:{popup:'swal-glass'},
+                title:`Analitik Bulan Ini`,
+                html:`<div class="grid grid-cols-2 gap-3 mb-4"><div class="bg-red-500/20 p-5 rounded-2xl"><p class="text-[9px] font-bold text-red-400 uppercase">Perbelanjaan Minyak</p><p class="text-2xl font-bold">RM ${tRM.toFixed(2)}</p></div><div class="bg-green-500/20 p-5 rounded-2xl"><p class="text-[9px] font-bold text-green-400 uppercase">Jarak Perjalanan</p><p class="text-2xl font-bold">${tKM} KM</p></div></div>`
             });
         }
 
@@ -531,14 +548,15 @@
                 title: `<span class="text-blue-400 font-bold uppercase text-sm">Butiran Rekod</span>`,
                 html: `<div class="text-left space-y-4 p-2 text-white text-xs">
                     <div class="grid grid-cols-3 gap-2 text-center bg-black/40 p-3 rounded-xl font-digital text-[9px]">
-                        <div><span class="opacity-30 uppercase">Mula</span><br>${t.tFrom}</div>
+                        <div><span class="opacity-30 uppercase">Dari</span><br>${t.tFrom}</div>
                         <div><span class="opacity-30 uppercase">Transit</span><br>${t.tSemasa}</div>
-                        <div><span class="opacity-30 uppercase">Akhir</span><br>${t.tTo}</div>
+                        <div><span class="opacity-30 uppercase">Hingga</span><br>${t.tTo}</div>
                     </div>
                     ${t.odoEnd > 0 ? `<div class="bg-green-500/10 p-4 rounded-xl border border-green-500/20 flex justify-between"><div><p class="text-green-400 font-bold text-[9px] uppercase">Odo: ${t.odoStart} → ${t.odoEnd}</p></div><div><p class="text-yellow-500 font-bold text-[11px] uppercase">+${t.dist} KM</p></div></div>` : ''}
                     ${t.rmMinyak > 0 ? `<div class="bg-red-500/10 p-4 rounded-xl border border-red-500/20 text-center font-bold">MINYAK: RM ${t.rmMinyak.toFixed(2)} (${t.fuelType})</div>` : ''}
                     <div class="p-4 bg-white/5 rounded-xl border border-white/10 italic leading-relaxed text-sm">${t.note}</div>
-                </div>`
+                </div>`,
+                confirmButtonText: 'TUTUP'
             });
         }
 
