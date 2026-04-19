@@ -3,182 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pilot Intelligent System | Official Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Gloria+Hallelujah&display=swap" rel="stylesheet">
+    <title>Pilot Intelligent System | Responsive Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;800&family=Gloria+Hallelujah&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #00f2fe;
-            --secondary: #4facfe;
-            --success: #00ff88;
-            --bg: #020617;
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary: #00f2fe; --secondary: #4facfe; --success: #00ff88;
+            --bg: #020617; --glass: rgba(255, 255, 255, 0.05);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
 
         body {
-            background-color: var(--bg);
-            color: white;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
+            background-color: var(--bg); color: white; min-height: 100vh;
+            display: flex; align-items: center; justify-content: center; 
+            padding: 10px; overflow-x: hidden;
         }
 
-        /* --- BACKGROUND ELEMENTS --- */
+        /* --- BACKGROUND SCENERY --- */
         .jata-bg {
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50%; max-width: 350px;
-            opacity: 0.06; z-index: -3;
-            filter: grayscale(1) brightness(1.5);
-            pointer-events: none;
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 70%; max-width: 400px; opacity: 0.06; z-index: -3; pointer-events: none;
         }
 
         .digital-strap {
-            position: fixed;
-            width: 300%; height: 400px;
+            position: fixed; width: 300%; height: 300px;
             background: linear-gradient(90deg, transparent, rgba(0, 242, 254, 0.05), rgba(245, 87, 108, 0.08), transparent);
-            transform: rotate(-25deg);
-            z-index: -2;
-            filter: blur(80px);
-            animation: moveStrap 20s linear infinite;
+            transform: rotate(-25deg); z-index: -2; filter: blur(60px); animation: moveStrap 20s linear infinite;
         }
+        @keyframes moveStrap { from { transform: rotate(-25deg) translateX(-30%); } to { transform: rotate(-25deg) translateX(10%); } }
 
-        @keyframes moveStrap {
-            from { transform: rotate(-25deg) translateX(-30%); }
-            to { transform: rotate(-25deg) translateX(10%); }
-        }
-
-        /* --- COLORFUL SKETCH TEXT & HANDWRITING --- */
+        /* --- SKETCH HANDWRITING REVEAL --- */
         .sketch-font {
             font-family: 'Gloria Hallelujah', cursive;
             background: linear-gradient(to right, #00f2fe, #f093fb, #fce38a, #00ff88);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
-            white-space: nowrap;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            display: inline-block; white-space: normal; overflow: hidden;
         }
 
-        .reveal-handwriting {
-            animation: handwriting 2s steps(40, end) forwards;
-            clip-path: inset(0 100% 0 0);
-        }
+        .reveal-handwriting { animation: handwriting 2s steps(40, end) forwards; clip-path: inset(0 100% 0 0); }
+        @keyframes handwriting { to { clip-path: inset(0 0 0 0); } }
 
-        @keyframes handwriting {
-            to { clip-path: inset(0 0 0 0); }
-        }
+        /* --- LAYOUT --- */
+        .container { width: 100%; max-width: 1000px; text-align: center; z-index: 10; padding: 20px 0; }
+        .header h1 { font-size: clamp(1.5rem, 6vw, 2.5rem); margin-bottom: 5px; line-height: 1.2; }
+        
+        .grid { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 15px; }
 
-        .container { 
-            width: 100%; 
-            max-width: 950px; 
-            text-align: center; 
-            z-index: 10;
-        }
-
-        .header h1 { font-size: clamp(1.8rem, 6vw, 2.8rem); margin-bottom: 5px; }
-        .header p { font-size: clamp(0.9rem, 2vw, 1.1rem); margin-bottom: 20px; }
-
-        /* --- GRID & CARDS --- */
-        .grid { 
-            display: flex; 
-            justify-content: center; 
-            gap: 15px; 
-            flex-wrap: wrap;
-        }
-
+        /* --- CARDS --- */
         .card {
-            background: var(--glass); 
-            backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border); 
-            border-radius: 24px;
-            padding: 15px; 
-            width: 340px; 
-            cursor: pointer;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 20px;
+            padding: 15px; width: 100%; max-width: 320px; cursor: pointer;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative;
+            display: flex; flex-direction: column; align-items: center;
         }
+        .card:hover { border-color: var(--primary); transform: translateY(-5px); }
 
-        .card:hover { border-color: var(--primary); background: rgba(255,255,255,0.08); }
-
-        .emoji-pixar { font-size: 3rem; margin-bottom: 5px; animation: float 4s infinite; }
+        .emoji-pixar { font-size: clamp(2.5rem, 8vw, 3.5rem); margin-bottom: 5px; animation: float 4s infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-        .card h2 { font-size: 1.3rem; margin-bottom: 2px; }
-        .short-desc { color: #94a3b8; font-size: 0.75rem; margin-bottom: 8px; }
+        .card h2 { font-size: 1.2rem; margin-bottom: 2px; font-weight: 800; }
+        .short-desc { color: #94a3b8; font-size: 0.75rem; margin-bottom: 10px; }
 
         /* INFO DETAILS */
         .info-details {
-            max-height: 0; opacity: 0; overflow: hidden;
-            transition: all 0.5s ease-in-out; 
-            font-size: 0.72rem; color: #cbd5e1; 
-            text-align: left; background: rgba(0,0,0,0.3);
+            max-height: 0; opacity: 0; overflow: hidden; transition: 0.4s ease-in-out;
+            font-size: 0.75rem; color: #cbd5e1; text-align: left; background: rgba(0,0,0,0.3);
             border-radius: 12px; width: 100%;
         }
-        .card.active .info-details {
-            max-height: 300px; opacity: 1; margin: 8px 0; padding: 12px;
-        }
-        .info-details p { line-height: 1.5; margin-bottom: 4px; }
+        .card.active .info-details { max-height: 350px; opacity: 1; margin: 10px 0; padding: 12px; }
+        .info-details p { line-height: 1.4; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 2px; }
 
         /* BUTTONS */
-        .btn-wrapper { width: 100%; position: relative; z-index: 100; margin-top: 10px; }
-        .btn { 
-            width: 100%; padding: 12px; border-radius: 50px; 
-            font-weight: 800; text-transform: uppercase; border: none; cursor: pointer; 
-            font-size: 0.75rem; letter-spacing: 1px; transition: 0.3s;
+        .btn-wrapper { width: 100%; margin-top: auto; }
+        .btn {
+            width: 100%; padding: 12px; border-radius: 50px; font-weight: 800;
+            text-transform: uppercase; border: none; cursor: pointer; font-size: 0.8rem; transition: 0.3s;
         }
-        .btn-old { background: rgba(255,255,255,0.15); color: #fff; }
+        .btn-old { background: rgba(255,255,255,0.1); color: #eee; }
         .btn-new { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #001; }
-        .btn:hover { transform: scale(1.05); filter: brightness(1.2); }
+        .btn:hover { filter: brightness(1.2); letter-spacing: 0.5px; }
 
-        /* STATUS */
-        .status-tag { margin-top: 10px; display: flex; align-items: center; gap: 5px; }
-        .dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; box-shadow: 0 0 8px var(--success); }
+        /* STATUS TAG */
+        .status-tag { margin-top: 10px; display: flex; align-items: center; gap: 5px; font-size: 0.65rem; color: var(--success); font-weight: 800; }
+        .dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; box-shadow: 0 0 8px var(--success); animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        /* AI HELPER */
-        #ai-assistant {
-            position: fixed; width: 100px; height: 100px; z-index: 1000; pointer-events: none;
-            transition: all 0.6s ease; display: flex; flex-direction: column; align-items: center;
-            opacity: 0; transform: translate(-50%, -50%);
-        }
-        .ai-robot { font-size: 2.5rem; filter: drop-shadow(0 0 10px var(--primary)); }
-        .ai-bubble {
-            background: rgba(0,0,0,0.9); border: 1px solid var(--primary);
-            padding: 8px 12px; border-radius: 12px; font-size: 0.65rem;
-            width: 180px; text-align: center; margin-top: 5px; opacity: 0; transition: 0.3s;
-        }
-        .ai-bubble.show { opacity: 1; }
-
-        /* LANG SWITCH */
+        /* LANGUAGE SWITCH */
         .lang-switch {
-            position: fixed; top: 15px; right: 15px; display: flex; z-index: 200;
-            background: var(--glass); padding: 4px; border-radius: 50px; border: 1px solid var(--glass-border);
+            position: fixed; top: 15px; right: 15px; display: flex;
+            background: var(--glass); padding: 4px; border-radius: 50px; z-index: 100; border: 1px solid var(--glass-border);
         }
         .lang-btn {
-            padding: 5px 12px; border-radius: 50px; border: none; background: transparent; 
+            padding: 4px 10px; border-radius: 50px; border: none; background: transparent;
             color: #888; cursor: pointer; font-weight: 700; font-size: 0.65rem;
         }
         .lang-btn.active { background: white; color: black; }
 
-        /* WARP SPEED */
+        /* WARP SPEED ANIMATION */
         #warp-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; pointer-events: none; }
         .warp-line { position: absolute; width: 2px; height: 100px; background: #fff; opacity: 0; }
         .flash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; z-index: 10000; pointer-events: none; }
         .shaking { animation: shake 0.1s infinite; }
         @keyframes shake { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-2px, -1px); } }
 
-        @media (max-width: 700px) {
-            body { overflow-y: auto; height: auto; padding: 60px 10px; }
+        /* RESPONSIVE TWEAKS */
+        @media (max-width: 480px) {
+            body { align-items: flex-start; overflow-y: auto; height: auto; }
+            .container { padding-top: 60px; padding-bottom: 40px; }
             .grid { flex-direction: column; align-items: center; }
-            #ai-assistant { display: none; }
-            .container { padding-top: 20px; }
+            .card { width: 90vw; }
+            .header h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -186,11 +121,6 @@
 
     <div class="flash" id="flash-screen"></div>
     <div id="warp-canvas"></div>
-
-    <div id="ai-assistant">
-        <div class="ai-robot">🤖</div>
-        <div class="ai-bubble" id="ai-text">Pilot Assistant Active.</div>
-    </div>
 
     <div class="lang-switch">
         <button class="lang-btn active" onclick="setLang('en', this)">EN</button>
@@ -202,51 +132,47 @@
 
     <div class="container" id="main-content">
         <header>
-            <p id="t-sub" class="sketch-font reveal-handwriting" style="font-size: 1.1rem; letter-spacing: 2px;">PILOT INTELLIGENT SYSTEM</p>
+            <p id="t-sub" class="sketch-font reveal-handwriting" style="font-size: 0.9rem; letter-spacing: 2px;">PILOT INTELLIGENT SYSTEM</p>
             <br>
-            <h1 id="t-main" class="sketch-font reveal-handwriting" style="animation-delay: 1s;">Select Experience</h1>
+            <h1 id="t-main" class="sketch-font reveal-handwriting" style="animation-delay: 0.5s;">Select Experience</h1>
         </header>
 
         <div class="grid">
-            <!-- STANDARD -->
-            <div class="card" id="card-old" onclick="toggleInfo('old')" onmouseenter="moveAI('old')">
+            <!-- STANDARD PORTAL -->
+            <div class="card" id="card-old" onclick="toggleInfo('old')">
                 <div class="emoji-pixar">💾</div>
                 <h2 id="t-old-title">Standard</h2>
                 <p class="short-desc" id="t-old-short">Stable Legacy View</p>
-                
                 <div class="info-details" id="info-old">
                     <p id="t-old-i1">1. Seni bina pangkalan data lama</p>
                     <p id="t-old-i2">2. Tidak mengikut buku log asal</p>
                     <p id="t-old-i3">3. Dioptimumkan untuk kelajuan</p>
                 </div>
-
                 <div class="btn-wrapper">
                     <button class="btn btn-old" onclick="startWarp('legacy', event)" id="t-old-btn">Enter Classic</button>
                 </div>
             </div>
 
-            <!-- QUANTUM UI -->
-            <div class="card" id="card-new" onclick="toggleInfo('new')" onmouseenter="moveAI('new')">
+            <!-- QUANTUM UI PORTAL -->
+            <div class="card" id="card-new" onclick="toggleInfo('new')">
                 <div class="emoji-pixar" style="animation-delay: -2s;">🔮</div>
                 <h2 id="t-new-title">Quantum UI</h2>
-                <p class="short-desc" id="t-new-short">Official Logbook View</p>
-
+                <p class="short-desc" id="t-new-short">Advanced Official View</p>
                 <div class="info-details" id="info-new">
                     <p id="t-new-i1">1. Ketepatan Buku Log Asli</p>
                     <p id="t-new-i2">2. Export PDF Butiran Penuh</p>
                     <p id="t-new-i3">3. Boleh terus print</p>
                     <p id="t-new-i4">4. Mempunyai data gaji dan elaun</p>
                     <p id="t-new-i5">5. Kiraan gaji pokok per jam</p>
-                    <p id="t-new-i6">6. Data selamat di Google Database</p>
+                    <p id="t-new-i6">6. Data selamat di Google Cloud</p>
+                    <p id="t-new-i7">7. Kiraan auto odometer (KM)</p>
                 </div>
-
                 <div class="btn-wrapper">
                     <button class="btn btn-new" onclick="startWarp('quantum', event)" id="t-new-btn">Launch Update</button>
                 </div>
-                
                 <div class="status-tag">
                     <div class="dot"></div>
-                    <span id="t-status" style="font-size: 0.65rem; color: var(--success); font-weight: 800;">Official v3.4</span>
+                    <span id="t-status">OFFICIAL V3.4</span>
                 </div>
             </div>
         </div>
@@ -254,7 +180,7 @@
 
     <script>
         // ==========================================
-        // 🔗 MASUKKAN URL ANDA DI SINI
+        // 🔗 GANTIKAN URL DI SINI
         // ==========================================
         const URL_LEGACY = "https://ttv4u1.github.io/"; 
         const URL_QUANTUM = "https://ttv4u1.github.io/pv"; 
@@ -265,58 +191,31 @@
             en: {
                 sub: "PILOT INTELLIGENT SYSTEM",
                 main: "Select Experience",
-                oldTitle: "Standard",
-                oldShort: "Stable Legacy View",
-                oldBtn: "Enter Classic",
+                oldTitle: "Standard", oldShort: "Stable Legacy View", oldBtn: "Enter Classic",
                 oldI: ["1. Legacy database architecture", "2. Non-original logbook format", "3. Optimized for speed"],
-                newTitle: "Quantum UI",
-                newShort: "Official Logbook View",
-                newBtn: "Launch Update",
-                newI: ["1. Original Logbook Precision", "2. Full Detail PDF Export", "3. Direct Print Support", "4. Salary & Allowance Data", "5. Hourly rate calculation", "6. Google Database secured"],
-                status: "Official v3.4",
-                aiOld: "Click to see Standard system details.",
-                aiNew: "Click to see v3.4 Quantum details."
+                newTitle: "Quantum UI", newShort: "Advanced Official View", newBtn: "Launch Update",
+                newI: ["1. Original Logbook Precision", "2. Full Detail PDF Export", "3. Direct Print Support", "4. Salary & Allowance Data", "5. Hourly rate calculation", "6. Google Cloud secured", "7. Auto odometer calculation (KM)"],
+                status: "OFFICIAL V3.4"
             },
             my: {
                 sub: "SISTEM PINTAR PILOT",
                 main: "Pilih Pengalaman",
-                oldTitle: "Standard",
-                oldShort: "Paparan Warisan Stabil",
-                oldBtn: "Masuk Klasik",
+                oldTitle: "Standard", oldShort: "Paparan Warisan Stabil", oldBtn: "Masuk Klasik",
                 oldI: ["1. Seni bina pangkalan data lama", "2. Tidak mengikut buku log asal", "3. Dioptimumkan untuk kelajuan"],
-                newTitle: "UI Quantum",
-                newShort: "Paparan Buku Log Rasmi",
-                newBtn: "Lancar Kemas Kini",
-                newI: ["1. Ketepatan Buku Log Asli", "2. Export PDF Butiran Penuh", "3. Boleh terus print", "4. Mempunyai data gaji dan elaun", "5. Kiraan gaji pokok per jam", "6. Data selamat di Google Database"],
-                status: "Rasmi v3.4",
-                aiOld: "Klik untuk butiran sistem Standard.",
-                aiNew: "Klik untuk butiran Quantum v3.4."
+                newTitle: "UI Quantum", newShort: "Paparan Buku Log Rasmi", newBtn: "Lancar Kemas Kini",
+                newI: ["1. Ketepatan Buku Log Asli", "2. Export PDF Butiran Penuh", "3. Boleh terus print", "4. Mempunyai data gaji dan elaun", "5. Kiraan gaji pokok per jam", "6. Data selamat di Google Cloud", "7. Kiraan auto odometer (KM)"],
+                status: "RASMI V3.4"
             }
         };
 
-        const ai = document.getElementById('ai-assistant');
-        const aiBubble = document.querySelector('.ai-bubble');
-
-        function moveAI(target) {
-            const card = document.getElementById(target === 'old' ? 'card-old' : 'card-new');
-            const rect = card.getBoundingClientRect();
-            ai.style.top = (rect.top + window.scrollY - 30) + 'px';
-            ai.style.left = (rect.right - 40) + 'px';
-            ai.style.opacity = "1";
-            aiBubble.innerText = target === 'old' ? trans[currentLang].aiOld : trans[currentLang].aiNew;
-            aiBubble.classList.add('show');
-        }
-
         function toggleInfo(type) {
-            const card = document.getElementById(type === 'old' ? 'card-old' : 'card-new');
-            const other = document.getElementById(type === 'old' ? 'card-new' : 'card-old');
-            card.classList.toggle('active');
-            other.classList.remove('active');
+            document.getElementById(`card-${type}`).classList.toggle('active');
+            const other = type === 'old' ? 'new' : 'old';
+            document.getElementById(`card-${other}`).classList.remove('active');
         }
 
         function setLang(l, btn) {
-            currentLang = l;
-            const d = trans[l];
+            currentLang = l; const d = trans[l];
             document.getElementById('t-sub').innerText = d.sub;
             document.getElementById('t-main').innerText = d.main;
             document.getElementById('t-old-title').innerText = d.oldTitle;
@@ -326,28 +225,21 @@
             document.getElementById('t-new-short').innerText = d.newShort;
             document.getElementById('t-new-btn').innerText = d.newBtn;
             document.getElementById('t-status').innerText = d.status;
-            
-            // Update lists
             for(let i=1; i<=3; i++) document.getElementById(`t-old-i${i}`).innerText = d.oldI[i-1];
-            for(let i=1; i<=6; i++) document.getElementById(`t-new-i${i}`).innerText = d.newI[i-1];
-
+            for(let i=1; i<=7; i++) document.getElementById(`t-new-i${i}`).innerText = d.newI[i-1];
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-
-            // Reset Animation
-            const els = document.querySelectorAll('.sketch-font');
-            els.forEach(el => { el.classList.remove('reveal-handwriting'); void el.offsetWidth; el.classList.add('reveal-handwriting'); });
+            
+            const el = document.querySelectorAll('.sketch-font');
+            el.forEach(e => { e.classList.remove('reveal-handwriting'); void e.offsetWidth; e.classList.add('reveal-handwriting'); });
         }
 
         function startWarp(dest, event) {
             event.stopPropagation();
             const canvas = document.getElementById('warp-canvas');
-            const body = document.getElementById('master-body');
-            const flash = document.getElementById('flash-screen');
-            body.classList.add('shaking');
+            document.getElementById('master-body').classList.add('shaking');
             document.getElementById('main-content').style.opacity = "0";
-
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 40; i++) {
                 setTimeout(() => {
                     const line = document.createElement('div');
                     line.className = 'warp-line';
@@ -358,12 +250,10 @@
                     setTimeout(() => line.remove(), 400);
                 }, i * 10);
             }
-
             setTimeout(() => {
-                flash.style.opacity = "1";
-                flash.style.transition = "opacity 0.3s";
-                setTimeout(() => { window.location.href = (dest === 'legacy') ? URL_LEGACY : URL_QUANTUM; }, 300);
-            }, 1000);
+                document.getElementById('flash-screen').style.opacity = "1";
+                setTimeout(() => { window.location.href = (dest === 'legacy') ? URL_LEGACY : URL_QUANTUM; }, 150);
+            }, 800);
         }
     </script>
 </body>
