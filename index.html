@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pilot Intelligent System | Multi-Turbo Portal</title>
+    <title>Pilot Intelligent System | Warp Portal</title>
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;800&family=Gloria+Hallelujah&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -15,20 +16,19 @@
 
         body {
             background-color: var(--bg); color: white; height: 100vh;
-            display: flex; align-items: center; justify-content: center; 
-            padding: 10px; overflow: hidden;
+            overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 10px;
         }
 
         /* --- BACKGROUND SCENERY --- */
         .jata-bg {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 70%; max-width: 400px; opacity: 0.06; z-index: -3; pointer-events: none;
+            width: 50%; max-width: 350px; opacity: 0.06; z-index: -3; pointer-events: none;
         }
 
         .digital-strap {
-            position: fixed; width: 300%; height: 300px;
+            position: fixed; width: 300%; height: 400px;
             background: linear-gradient(90deg, transparent, rgba(0, 242, 254, 0.05), rgba(245, 87, 108, 0.08), transparent);
-            transform: rotate(-25deg); z-index: -2; filter: blur(60px); animation: moveStrap 20s linear infinite;
+            transform: rotate(-25deg); z-index: -2; filter: blur(80px); animation: moveStrap 20s linear infinite;
         }
         @keyframes moveStrap { from { transform: rotate(-25deg) translateX(-30%); } to { transform: rotate(-25deg) translateX(10%); } }
 
@@ -37,88 +37,83 @@
             font-family: 'Gloria Hallelujah', cursive;
             background: linear-gradient(to right, #00f2fe, #f093fb, #fce38a, #00ff88);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            display: inline-block;
+            display: inline-block; white-space: nowrap; overflow: hidden;
         }
 
         .reveal-handwriting { animation: handwriting 2s steps(40, end) forwards; clip-path: inset(0 100% 0 0); }
         @keyframes handwriting { to { clip-path: inset(0 0 0 0); } }
 
         /* --- LAYOUT --- */
-        .container { width: 100%; max-width: 1000px; text-align: center; z-index: 10; transition: 0.5s; }
-        .header h1 { font-size: clamp(1.6rem, 5vw, 2.5rem); margin-bottom: 5px; line-height: 1.2; }
+        .container { width: 100%; max-width: 900px; text-align: center; z-index: 10; transition: 0.5s; }
+        .header h1 { font-size: clamp(1.8rem, 6vw, 2.8rem); margin-bottom: 5px; }
         
-        .grid { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 15px; }
+        .grid { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 20px; }
 
-        /* --- CARDS --- */
         .card {
-            background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 20px;
-            padding: 15px; width: 100%; max-width: 320px; cursor: pointer;
-            transition: 0.3s; position: relative;
-            display: flex; flex-direction: column; align-items: center;
+            background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px; padding: 20px; width: 330px; cursor: pointer;
+            transition: 0.3s; position: relative; display: flex; flex-direction: column; align-items: center;
         }
-        .card:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .card:hover { border-color: var(--primary); transform: scale(1.02); }
 
-        .emoji-pixar { font-size: clamp(2.5rem, 8vw, 3.5rem); margin-bottom: 5px; animation: float 4s infinite; }
+        .emoji-pixar { font-size: 3rem; margin-bottom: 10px; animation: float 4s infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-        .card h2 { font-size: 1.2rem; margin-bottom: 2px; font-weight: 800; }
-        .short-desc { color: #94a3b8; font-size: 0.75rem; margin-bottom: 10px; }
+        .card h2 { font-size: 1.4rem; margin-bottom: 5px; }
+        .short-desc { color: #94a3b8; font-size: 0.8rem; margin-bottom: 10px; }
 
-        /* INFO DETAILS */
+        /* INFO DETAILS (EXPANDABLE) */
         .info-details {
             max-height: 0; opacity: 0; overflow: hidden; transition: 0.4s ease-in-out;
-            font-size: 0.75rem; color: #cbd5e1; text-align: left; background: rgba(0,0,0,0.4);
+            font-size: 0.75rem; color: #cbd5e1; text-align: left; background: rgba(0,0,0,0.3);
             border-radius: 12px; width: 100%;
         }
-        .card.active .info-details { max-height: 350px; opacity: 1; margin: 10px 0; padding: 12px; }
-        .info-details p { line-height: 1.4; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 2px; }
+        .card.active .info-details { max-height: 400px; opacity: 1; margin: 10px 0; padding: 12px; }
+        .info-details p { line-height: 1.5; margin-bottom: 3px; }
 
         /* BUTTONS */
-        .btn-wrapper { width: 100%; margin-top: auto; }
+        .btn-wrapper { width: 100%; margin-top: 10px; z-index: 50; }
         .btn {
-            width: 100%; padding: 12px; border-radius: 50px; font-weight: 800;
+            width: 100%; padding: 14px; border-radius: 50px; font-weight: 800;
             text-transform: uppercase; border: none; cursor: pointer; font-size: 0.8rem; transition: 0.3s;
         }
-        .btn-old { background: rgba(255,255,255,0.1); color: #eee; }
+        .btn-old { background: rgba(255,255,255,0.1); color: #ccc; }
         .btn-new { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #001; }
+        .btn:hover { filter: brightness(1.2); }
 
-        /* TURBO GIF OVERLAY */
-        #turbo-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: black; z-index: 10000; display: none;
-            justify-content: center; align-items: center;
-        }
-        #turbo-overlay img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* STATUS TAG */
-        .status-tag { margin-top: 10px; display: flex; align-items: center; gap: 5px; font-size: 0.65rem; color: var(--success); font-weight: 800; }
+        /* STATUS */
+        .status-tag { margin-top: 10px; display: flex; align-items: center; gap: 5px; font-size: 0.7rem; color: var(--success); font-weight: 800; }
         .dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; box-shadow: 0 0 8px var(--success); animation: pulse 1s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        /* TURBO WARP ANIMATION */
+        #warp-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; pointer-events: none; overflow: hidden; }
+        .warp-line { position: absolute; width: 2px; height: 150px; background: #fff; opacity: 0; }
+        .flash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; z-index: 10000; pointer-events: none; }
+        .shaking { animation: shake 0.1s infinite; }
+        @keyframes shake { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-2px, -1px); } }
 
         .lang-switch {
             position: fixed; top: 15px; right: 15px; display: flex;
             background: var(--glass); padding: 4px; border-radius: 50px; z-index: 100;
         }
         .lang-btn {
-            padding: 4px 10px; border-radius: 50px; border: none; background: transparent;
-            color: #888; cursor: pointer; font-weight: 700; font-size: 0.65rem;
+            padding: 5px 12px; border-radius: 50px; border: none; background: transparent;
+            color: #888; cursor: pointer; font-weight: 700; font-size: 0.7rem;
         }
         .lang-btn.active { background: white; color: black; }
 
         @media (max-width: 700px) {
-            body { align-items: center; overflow-y: auto; height: auto; padding: 60px 10px; }
+            body { overflow-y: auto; height: auto; padding: 60px 10px; }
             .grid { flex-direction: column; align-items: center; }
-            .card { max-width: 320px; width: 90vw; }
+            .container { padding-top: 20px; }
         }
     </style>
 </head>
 <body id="master-body">
 
-    <!-- Turbo GIF Overlay -->
-    <div id="turbo-overlay">
-        <img id="turbo-img" src="" alt="Turbo Animation">
-    </div>
+    <div class="flash" id="flash-screen"></div>
+    <div id="warp-canvas"></div>
 
     <div class="lang-switch">
         <button class="lang-btn active" onclick="setLang('en', this)">EN</button>
@@ -128,9 +123,9 @@
     <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Coat_of_arms_of_Malaysia.svg" alt="Jata Negara" class="jata-bg">
     <div class="digital-strap"></div>
 
-    <div class="container" id="main-ui">
+    <div class="container" id="main-content">
         <header>
-            <p id="t-sub" class="sketch-font reveal-handwriting" style="font-size: 0.9rem; letter-spacing: 2px;">PILOT INTELLIGENT SYSTEM</p>
+            <p id="t-sub" class="sketch-font reveal-handwriting" style="font-size: 1rem; letter-spacing: 2px;">PILOT INTELLIGENT SYSTEM</p>
             <br>
             <h1 id="t-main" class="sketch-font reveal-handwriting" style="animation-delay: 0.5s;">Select Experience</h1>
         </header>
@@ -147,7 +142,7 @@
                     <p id="t-old-i3">3. Dioptimumkan untuk kelajuan</p>
                 </div>
                 <div class="btn-wrapper">
-                    <button class="btn btn-old" onclick="startTurbo('legacy', event)" id="t-old-btn">Enter Classic</button>
+                    <button class="btn btn-old" onclick="startWarp('legacy', event)" id="t-old-btn">Enter Classic</button>
                 </div>
             </div>
 
@@ -166,7 +161,7 @@
                     <p id="t-new-i7">7. Kiraan auto odometer (KM)</p>
                 </div>
                 <div class="btn-wrapper">
-                    <button class="btn btn-new" onclick="startTurbo('quantum', event)" id="t-new-btn">Launch Update</button>
+                    <button class="btn btn-new" onclick="startWarp('quantum', event)" id="t-new-btn">Launch Update</button>
                 </div>
                 <div class="status-tag">
                     <div class="dot"></div>
@@ -182,10 +177,6 @@
         // ==========================================
         const URL_LEGACY = "https://ttv4u1.github.io/"; 
         const URL_QUANTUM = "https://ttv4u1.github.io/pv"; 
-
-        // 🖼️ GANTIKAN GIF DI SINI JIKA MAHU
-        const GIF_STANDARD = "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExcmE2a2M2bmpwN2M4emNyMzZ0MzRza2ExZmhodzV0NjM3eTFsdnE0YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/yxoieRaIjfj2/giphy.gif"; // Digital Matrix Style
-        const GIF_QUANTUM = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExczZueHpsZ3ZueHpsZ3ZueHpsZ3ZueHpsZ3ZueHpsZ3ZueHpsZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XbV2eCHp0mHthRjdJP/giphy.gif"; // Warp Speed Style
         // ==========================================
 
         let currentLang = 'en';
@@ -211,8 +202,7 @@
         };
 
         function toggleInfo(type) {
-            const card = document.getElementById(`card-${type}`);
-            card.classList.toggle('active');
+            document.getElementById(`card-${type}`).classList.toggle('active');
             const other = type === 'old' ? 'new' : 'old';
             document.getElementById(`card-${other}`).classList.remove('active');
         }
@@ -232,25 +222,46 @@
             for(let i=1; i<=7; i++) document.getElementById(`t-new-i${i}`).innerText = d.newI[i-1];
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+            
             const el = document.querySelectorAll('.sketch-font');
             el.forEach(e => { e.classList.remove('reveal-handwriting'); void e.offsetWidth; e.classList.add('reveal-handwriting'); });
         }
 
-        function startTurbo(dest, event) {
+        function startWarp(dest, event) {
             event.stopPropagation();
-            const overlay = document.getElementById('turbo-overlay');
-            const img = document.getElementById('turbo-img');
-            const ui = document.getElementById('main-ui');
+            const canvas = document.getElementById('warp-canvas');
+            const ui = document.getElementById('main-content');
             
-            // Set GIF berdasarkan pilihan
-            img.src = (dest === 'legacy') ? GIF_STANDARD : GIF_QUANTUM;
-            
-            overlay.style.display = 'flex';
+            document.getElementById('master-body').classList.add('shaking');
             ui.style.opacity = '0';
+            ui.style.transform = 'scale(0.9)';
             
+            // Generate Speed Lines
+            for (let i = 0; i < 60; i++) {
+                setTimeout(() => {
+                    const line = document.createElement('div');
+                    line.className = 'warp-line';
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * window.innerHeight;
+                    const angle = Math.atan2(y - window.innerHeight/2, x - window.innerWidth/2);
+                    
+                    line.style.left = x + 'px';
+                    line.style.top = y + 'px';
+                    line.style.transform = `rotate(${angle + Math.PI/2}rad)`;
+                    
+                    canvas.appendChild(line);
+                    line.animate([{transform: 'translateY(0)', opacity: 0}, {transform: 'translateY(-1200px)', opacity: 1}], {duration: 400});
+                    setTimeout(() => line.remove(), 400);
+                }, i * 10);
+            }
+
             setTimeout(() => {
-                window.location.href = (dest === 'legacy') ? URL_LEGACY : URL_QUANTUM;
-            }, 1800); // Masa sedikit lama untuk enjoy GIF
+                document.getElementById('flash-screen').style.opacity = "1";
+                document.getElementById('flash-screen').style.transition = "opacity 0.3s";
+                setTimeout(() => {
+                    window.location.href = (dest === 'legacy') ? URL_LEGACY : URL_QUANTUM;
+                }, 200);
+            }, 1000);
         }
     </script>
 </body>
